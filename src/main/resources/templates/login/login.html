@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+		
+		
+       
+		
+		
+        .form-group {
+			display: flex;
+			align-items: center;
+            margin-bottom: 17px;
+        }
+		
+		
+        .form-group label {
+			white-space: nowrap;
+            font-weight: bold;
+            display: block;
+        }
+		
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid rgb(0, 128, 255);
+            border-radius: 4px;
+        }
+		
+		
+        .form-group input[type="submit"] {
+            background-color: rgb(255, 255, 128);
+            color: rgb(0, 0, 0);
+            border: none;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: rgb(255, 217, 0);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">　ユーザID:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ログイン">
+            </div>
+        </form>
+    </div>
+
+
+</html>
