@@ -6,79 +6,75 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Form Layout</title>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link th:href="@{/css/styles.css}" rel="stylesheet">
+
 	<style>
 		.divider {
 			border-top: 1px solid blue;
 			margin-top: 10px;
 			margin-bottom: 20px;
 		}
-	</style>
 
+		.form-row {
+			margin-bottom: 10px;
+		}
+
+		.button {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+
+		.button button {
+			margin-left: 10px;
+		}
+	</style>
 </head>
 
 <body>
 	<div class="container">
 		<form id="userForm" onsubmit="return validateForm()">
-			<div class="form-row">
+			<div class="form-row align-items-center">
+				<div class="col-md-2">
+					<label for="username">ユーザー名</label>
+					<input type="text" class="form-control" id="username">
+					<button>
+						<class="btn btn-prima utton buttonry" type="button">検索</butto>
 
-				<div class="col-md-12 mb-3">
-					<div class="form-row">
-						<div class="col-md-2">
-							<label for="username">ユーザー名</label>
-						</div>
-						<div class="col-md-5 mr-5">
-							<input type="text" class="form-control" id="username">
-						</div>
-						<div class="col-md-3">
-							<button class="btn btn-primary" type="button">検索</button>
-						</div>
-					</div>
 				</div>
 			</div>
 
-			<div class="form-row">
-				<div class="col-md-12 mb-3">
-					<div class="divider"></div>
-				</div>
-			</div>
+			<div class="divider"></div>
 
-			<div class="form-row">
-				<div class="col-md-2 mb-3">
+			<div class="form-row align-items-center">
+				<div class="col-md-2">
 					<label for="userId">ユーザーID</label>
+					<input type="text" class="form-control" id="userId" th:value="${userId}">
 				</div>
-					<div class="col-md-5 mb-3">
-						<input type="text" class="form-control" id="userId">
-					</div>
-				
 			</div>
-			
-			<div class="form-row">
-				<div class="col-md-2 mb-3">
+
+			<div class="form-row align-items-center">
+				<div class="col-md-2">
 					<label for="password">パスワード</label>
-				</div>			
-				<div class="col-md-5 mb-3">
 					<input type="text" class="form-control" id="password">
 				</div>
 			</div>
-			
-			<div class="form-row">
-				<div class="col-md-2 mb-3 ">
+
+			<div class="form-row align-items-center">
+				<div class="col-md-2">
 					<label for="role">権限</label>
-				</div>
-				<div class="col-md-3 mb-3">
 					<input type="text" class="form-control" id="role">
 				</div>
 			</div>
-			<div class="form-row">
-				<div class="col-md-2 mb-3">
+
+			<div class="form-row align-items-center">
+				<div class="col-md-2">
 					<label for="date">利用開始日</label>
-				</div>
-				<div class="col-md-3 mb-3">
 					<input type="text" class="form-control" id="date">
 				</div>
 			</div>
-			<div>
+
+			<div class="form-row button">
 				<button class="btn btn-primary" type="submit">登録</button>
 			</div>
 		</form>
