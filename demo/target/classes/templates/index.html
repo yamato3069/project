@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Example</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <span>ユーザ名：XXXXXXXXXXXXXXXXXXXX</span>
+                <span>ユーザID：XXXXXXXXXXXXXXX</span>
+            </div>
+            <div class="display-month">
+                <label for="display-month">表示年月：</label>
+                <input type="text" id="display-month" name="display-month" placeholder="yyyy年mm月">
+            </div>
+            <div class="buttons">
+                <button>表示</button>
+                <button>却下</button>
+                <button>承認</button>
+                <button>承認申請</button>
+                <button>登録</button>
+            </div>
+        </div>
+        <table class="approval-info">
+            <thead>
+                <tr>
+                    <th>承認申請者</th>
+                    <th>申請対象年月</th>
+                    <th>申請日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>●●　××</td>
+                    <td>2024/5/1</td>
+                    <td>2024/5/30</td>
+                </tr>
+                <tr>
+                    <td>△△　▲▲</td>
+                    <td>2024/5/1</td>
+                    <td>2024/5/31</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="attendance-info">
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>曜日</th>
+                    <th>出勤状況</th>
+                    <th>出勤時間</th>
+                    <th>退勤時間</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>6/1</td>
+                    <td>土</td>
+                    <td>通常出勤</td>
+                    <td>○○：○○</td>
+                    <td>○○：○○</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6/2</td>
+                    <td>日</td>
+                    <td>遅刻</td>
+                    <td>○○：○○</td>
+                    <td>○○：○○</td>
+                    <td>電車遅延のため</td>
+                </tr>
+                <!-- 他の行を追加 -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
