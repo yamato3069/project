@@ -91,7 +91,11 @@
     <artifactId>mybatis</artifactId>
     <version>3.5.10</version> <!-- Check for the latest version -->
 </dependency>
-
+	<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 
 
