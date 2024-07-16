@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
     <style>
         body {
@@ -14,61 +14,66 @@
             height: 100vh;
             margin: 0;
         }
-		
-		
-       
-		
-		
+
+        .login-container {
+            width: 300px; /* フォームの幅を指定 */
+            padding: 20px;
+            border: 1px solid rgb(0, 128, 255);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
         .form-group {
-			display: flex;
-			align-items: center;
+            display: flex;
+            flex-direction: column;
             margin-bottom: 17px;
         }
-		
-		
+
         .form-group label {
-			white-space: nowrap;
             font-weight: bold;
-            display: block;
+            margin-bottom: 5px;
         }
-		
+
         .form-group input {
-            width: 100%;
             padding: 8px;
             font-size: 16px;
             border: 1px solid rgb(0, 128, 255);
             border-radius: 4px;
         }
-		
-		
+
         .form-group input[type="submit"] {
             background-color: rgb(255, 255, 128);
             color: rgb(0, 0, 0);
             border: none;
             cursor: pointer;
         }
+
         .form-group input[type="submit"]:hover {
             background-color: rgb(255, 217, 0);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
+        <form th:action="@{/login}" method="post" th:object="${loginForm}">
             <div class="form-group">
-                <label for="username">　ユーザID:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="userId">ユーザID:</label>
+                <input type="text" id="id" name="id" required th:value="${loginForm.id}" />
             </div>
             <div class="form-group">
                 <label for="password">パスワード:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required th:value="${loginForm.password}" />
             </div>
             <div class="form-group">
-				<form th:action="@{/attendance/regist2}">
-                <input type="submit" value="ログイン">
-				</form>
+                <input type="submit" value="ログイン" />
             </div>
- 
+            <div class="error" th:if="${error}" th:text="${error}"></div>
+        </form>
     </div>
-
-
+</body>
 </html>
