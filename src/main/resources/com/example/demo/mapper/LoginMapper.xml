@@ -2,10 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.LoginMapper">
+<select id="findAllUsers" resultType="com.example.demo.entity.LoginUser">
+    SELECT 
+    	id, 
+    	password, 
+    	name, 
+    	role, 
+    	start_date AS startDate
+    FROM users
+</select>
+
 <select id="getLoginUsers" resultType="com.example.demo.entity.LoginUser">
 	SELECT * 
 	FROM users
 	WHERE id = #{id}
 </select>
+
+<select id="serchUsers" resultType="com.example.demo.entity.LoginUser">
+	SELECT *
+	FROM users
+	WHERE name = #{name}
+</select>
+
+<insert id="insertUser" parameterType="com.example.demo.entity.LoginUser">
+	INSERT INTO users
+	(
+		id
+		,password
+		,name
+		,role
+		,start_date
+	) VALUES (
+		#{id}
+		,#{password}
+		,#{role}
+		,#{startDate}		
+	)
+		
+</insert>
 
 </mapper>

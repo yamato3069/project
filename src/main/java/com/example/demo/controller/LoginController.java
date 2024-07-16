@@ -24,9 +24,7 @@ public class LoginController {
 	@RequestMapping("login")
 	public String loginUser(@ModelAttribute LoginForm loginForm, Model model) {
 		LoginUser user = loginService.getLoginUsers(loginForm.getId());
-		
-		System.out.print(loginService.getLoginUsers(loginForm.getId()));
-		System.out.print(loginForm);
+	
 		
 		if( user != null && user.getPassword().equals(loginForm.getPassword())) {
 			model.addAttribute("user", user);

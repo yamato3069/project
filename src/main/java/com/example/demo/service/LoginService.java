@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,16 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
+	public List<LoginUser> findAllUsers() {
+		return loginMapper.findAllUsers();
+	}
+	
     public LoginUser getLoginUsers(Integer id) {   	
     	
     	return loginMapper.getLoginUsers(id);
     }
 
+    public boolean insertUser(LoginUser loginUser) {
+    	return true;
+    }
 }

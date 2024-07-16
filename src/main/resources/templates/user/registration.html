@@ -33,14 +33,12 @@
 
 <body>
 	<div class="container">
-		<form id="userForm" onsubmit="return validateForm()">
+		<form th:object="${userSerchForm}" th:action="@{/user/registration}" method="POST">
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
-					<label for="username">ユーザー名</label>
-					<input type="text" class="form-control" id="username">
-					<button>
-						<class="btn btn-prima utton buttonry" type="button">検索</butto>
-
+					<label for="name">ユーザー名</label>
+					<input type="text" class="form-control" id="name" th:field="*{name}" />
+					<button class="btn btn-primary" type="submit">検索</button>
 				</div>
 			</div>
 
@@ -49,36 +47,40 @@
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="userId">ユーザーID</label>
-					<input type="text" class="form-control" id="userId" th:value="${userId}">
+					<input type="text" class="form-control" id="userId" th:value="${user != null ? user.id : userId}" />
 				</div>
 			</div>
 
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="password">パスワード</label>
-					<input type="text" class="form-control" id="password">
+					<input type="text" class="form-control" id="password"
+						th:value="${user != null ? user.password : ''}" />
 				</div>
 			</div>
 
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="role">権限</label>
-					<input type="text" class="form-control" id="role">
+					<input type="text" class="form-control" id="role" th:value="${user != null ? user.role : ''}"/>
 				</div>
 			</div>
 
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="date">利用開始日</label>
-					<input type="text" class="form-control" id="date">
+					<input type="text" class="form-control" id="date"
+						th:value="${user != null ? #dates.format(user.startDate, 'yyyy-MM-dd') : ''}" />
 				</div>
-			</div>
-
-			<div class="form-row button">
-				<button class="btn btn-primary" type="submit">登録</button>
+				<div class="form-row align-items-center">
+					<div class="col-md-2">
+						<button class="btn btn-success" type="submit">登録</button>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
 </body>
+
 
 </html>
