@@ -83,14 +83,29 @@
                 dayCell.textContent = dayOfWeek;
                 
                 var statusCell = document.createElement("td");
+                var statusInput = document.createElement("input");
+                statusInput.type = "text";
+                statusInput.value = "通常出勤";  // 初期値を設定
+                
                 var startTimeCell = document.createElement("td");
+                var startTimeInput = document.createElement("input");
+                startTimeInput.type = "text";
+                startTimeInput.value = "09:00";  // 初期値を設定
+                
                 var endTimeCell = document.createElement("td");
+                var endTimeInput = document.createElement("input");
+                endTimeInput.type = "text";
+                endTimeInput.value = "18:00";    // 初期値を設定
+                
                 var remarksCell = document.createElement("td");
+                var remarksInput = document.createElement("input");
+                remarksInput.type = "text";
+                remarksInput.value = "";         // 初期値を設定
 
-                statusCell.textContent = "通常出勤";  // ここで勤務状況を設定します
-                startTimeCell.textContent = "09:00";  // ここで出勤時間を設定します
-                endTimeCell.textContent = "18:00";    // ここで退勤時間を設定します
-                remarksCell.textContent = "";         // ここで備考を設定します
+                statusCell.appendChild(statusInput);
+                startTimeCell.appendChild(startTimeInput);
+                endTimeCell.appendChild(endTimeInput);
+                remarksCell.appendChild(remarksInput);
 
                 row.appendChild(dateCell);
                 row.appendChild(dayCell);
