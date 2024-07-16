@@ -54,7 +54,6 @@
 </head>
 <body>
     <div class="login-container">
-        <form action="/login" method="POST">
             <div class="form-group">
                 <label for="username">　ユーザID:</label>
                 <input type="text" id="username" name="username" required>
@@ -64,9 +63,11 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="form-group">
+				<form th:action="@{/attendance/regist2}">
                 <input type="submit" value="ログイン">
+				</form>
             </div>
-        </form>
+ 
     </div>
 
 
