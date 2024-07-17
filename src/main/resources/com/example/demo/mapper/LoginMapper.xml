@@ -35,6 +35,7 @@
 	) VALUES (
 		#{id}
 		,#{password}
+		,#{name}
 		,#{role}
 		,#{startDate}		
 	)

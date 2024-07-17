@@ -38,48 +38,63 @@
 				<div class="col-md-2">
 					<label for="name">ユーザー名</label>
 					<input type="text" class="form-control" id="name" th:field="*{name}" />
-					<button class="btn btn-primary" type="submit">検索</button>
+					<button class="btn btn-primary" type="submit" name="action" value="search">検索</button>
 				</div>
 			</div>
 
 			<div class="divider"></div>
-
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="userId">ユーザーID</label>
-					<input type="text" class="form-control" id="userId" th:value="${user != null ? user.id : userId}" />
+					<input type="text" class="form-control" id="id" name="id"
+						th:value="${user != null ? user.id : userId}" />
 				</div>
 			</div>
+
 
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="password">パスワード</label>
-					<input type="text" class="form-control" id="password"
-						th:value="${user != null ? user.password : ''}" />
+					<input type="text" class="form-control" id="password" name="password"
+						th:value="${user != null ? user.password : ''}"/>
 				</div>
 			</div>
 
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="role">権限</label>
-					<input type="text" class="form-control" id="role" th:value="${user != null ? user.role : ''}"/>
+					<input type="text" class="form-control" id="role" name="role"
+						th:value="${user != null ? user.role : ''}" />
 				</div>
 			</div>
-
 			<div class="form-row align-items-center">
 				<div class="col-md-2">
 					<label for="date">利用開始日</label>
-					<input type="text" class="form-control" id="date"
+					<input type="text" class="form-control" id="startDate" name="startDate"
 						th:value="${user != null ? #dates.format(user.startDate, 'yyyy-MM-dd') : ''}" />
 				</div>
 				<div class="form-row align-items-center">
 					<div class="col-md-2">
-						<button class="btn btn-success" type="submit">登録</button>
+						<button class="btn btn-success" type="submit" name="action" value="register"
+							onclick="setRequiredFields()">登録</button>
 					</div>
 				</div>
 			</div>
+			<div class="error" th:if="${error}" th:text="${error}"></div>
+			<div class="success" th:if="${success}" th:text="${success}"></div>
 		</form>
 	</div>
+
+
+	<script>
+		function setRequiredFields() {
+			document.getElementById('name').setAttribute('required', 'required');
+			document.getElementById('id').setAttribute('required', 'required');
+			document.getElementById('password').setAttribute('required', 'required');
+			document.getElementById('role').setAttribute('required', 'required');
+			document.getElementById('startDate').setAttribute('required', 'required');
+		}
+	</script>
 </body>
 
 
