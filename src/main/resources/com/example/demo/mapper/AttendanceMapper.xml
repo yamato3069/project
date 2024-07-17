@@ -6,4 +6,26 @@
 		FROM attendance
 		WHERE YEAR(date) = #{year} AND MONTH(date) = #{month};
 	</select>
+	
+	<insert id="insertAttendance" parameterType="com.example.demo.dto.AttendanceDto">
+		INSERT INTO attendance
+		(
+			id
+			,user_id
+			,status
+			,date
+			,start_date
+			,end_time
+			,remarks
+		) VALUES (
+			#{id}
+			,#{userId}
+			,#{status}
+			,#{date}
+			,#{startDate}
+			,#{endTime}
+			,#{remarks}
+		)
+
+	</insert>
 </mapper>

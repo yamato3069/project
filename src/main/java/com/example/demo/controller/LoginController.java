@@ -32,7 +32,7 @@ public class LoginController {
 	            return "redirect:/user/registration";
 	        }
 
-	        return "attendance/regist2";
+	        return "attendance/regist";
 	        
 	    } else {
 	        model.addAttribute("error", "ユーザーIDまたはパスワードが正しくありません");
