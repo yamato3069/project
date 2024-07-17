@@ -9,32 +9,52 @@
 </head>
 
 <body>
-	
+
 	<div class="container">
 		<div class="user-info">
-				<span>ユーザ名：XXXXXXXXXXXXXXXXXXXX　　　　　　　　ユーザID：XXXXXXXXXXXXXXX</span>
-
-			</div>
+			<span>ユーザ名：XXXXXXXXXXXXXXXXXXXX　　　　　　　　ユーザID：XXXXXXXXXXXXXXX</span>
+		</div>
 		<div class="header">
-			
-			
+
+
+			<!--			<div class="display-month">-->
+			<!--				<label for="display-month">表示年月：</label>-->
+			<!--				<select id="yearDropdown"></select>-->
+			<!--				<label for="yearDropdown">:年</label>-->
+			<!--				<select id="monthDropdown"></select>-->
+			<!--				<label for="monthDropdown">:月</label>-->
+			<!--				<div class="buttons"><button id="showDatesButton">表示</button></div>-->
+			<!--			</div>-->
+
+			<form id="attendanceForm" th:action="@{/attendance/show}" method="get">
 				<div class="display-month">
-					<label for="display-month">表示年月：</label>
-					<select id="yearDropdown"></select>
-					<label for="yearDropdown">:年</label>
-					<select id="monthDropdown"></select>
-					<label for="monthDropdown">:月</label>
-					<div class="buttons"><button id="showDatesbuttons">表示</button></div>
+					<label for="yearDropdown">表示年月：</label>
+					<select id="yearDropdown" name="year"></select>
+					<label for="yearDropdown">年</label>
+					<select id="monthDropdown" name="month"></select>
+					<label for="monthDropdown">月</label>
+					<div class="buttons"><button type="submit">表示</button></div>
 				</div>
+				
+				<th:block th:if="${errorMessage}">
+				<div class="d-flex flex-column">
+					<span th:text="'*' + '&nbsp' + ${errorMessage}" class="help-inline error"></span>
+				</div>
+			</th:block>
 			
+			</form>
+
+			
+
+
 			<div class="buttons">
 				<button>却下</button>
 				<button>承認</button>
 				<button>承認申請</button>
 				<button>登録</button>
 			</div>
-			
-			
+
+
 		</div>
 		<table class="approval-info">
 			<thead>
@@ -72,91 +92,65 @@
 					<th>備考</th>
 				</tr>
 			</thead>
-			<tbody>
-<!--				<tr>-->
-<!--					<td>6/1</td>-->
-<!--					<td>土</td>-->
-<!--					<td>通常出勤</td>-->
-<!--					<td>○○：○○</td>-->
-<!--					<td>○○：○○</td>-->
-<!--					<td></td>-->
-<!--				</tr>-->
-<!--				<tr>-->
-<!--					<td>6/2</td>-->
-<!--					<td>日</td>-->
-<!--					<td>遅刻</td>-->
-<!--					<td>○○：○○</td>-->
-<!--					<td>○○：○○</td>-->
-<!--					<td>電車遅延のため</td>-->
-<!--				</tr>-->
+			<tbody id="dateTable">
+				<!-- 表示される内容はJavaScriptで動的に生成されます -->
+				<!--				<tr th:each="attendance : ${attendanceList}">-->
+				<!--					<td th:text="${attendance.date}">Date</td>-->
+				<!--					<td></td>-->
+				<!--					<td></td>-->
+				<!--					<td th:text="${attendance.startTime}">Start Time</td>-->
+				<!--					<td th:text="${attendance.endTime}">End Time</td>-->
+				<!--					<td th:text="${attendance.remarks}">Remarks</td>-->
+				<!--				</tr>-->
+
+				<tr th:each="calendera : ${calendar}">
+
+					<td th:text="${calendera.formattedDate}">Date</td>
+					<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
+					<td></td>
+					<td th:text="${calendera.startTime}">Start Time</td>
+					<td th:text="${calendera.endTime}">End Time</td>
+					<td th:text="${calendera.remarks}">Remarks</td>
+				</tr>
+
 			</tbody>
 		</table>
 	</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var yearSelect = document.getElementById("yearDropdown");
-            for (var year = 2000; year <= 2100; year++) {
-                var option = document.createElement("option");
-                option.value = year;
-                option.text = year;
-                yearSelect.appendChild(option);
-            }
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var yearSelect = document.getElementById("yearDropdown");
+			// 初期表示は未入力状態
+			var defaultOption = document.createElement("option");
+			defaultOption.value = "";
+			defaultOption.textContent = "";
+			yearSelect.appendChild(defaultOption);
+			// 2000年から2100年まで表示
+			for (var year = 2000; year <= 2100; year++) {
+				var option = document.createElement("option");
+				option.value = year;
+				option.textContent = year;
+				yearSelect.appendChild(option);
+			}
 
-            var monthSelect = document.getElementById("monthDropdown");
-            for (var month = 1; month <= 12; month++) {
-                var option = document.createElement("option");
-                option.value = month;
-                option.text = month;
-                monthSelect.appendChild(option);
-            }
+			var monthSelect = document.getElementById("monthDropdown");
+			// 初期表示は未入力状態
+			defaultOption = document.createElement("option");
+			defaultOption.value = "";
+			defaultOption.textContent = "";
+			monthSelect.appendChild(defaultOption);
+			// 1月から12月まで表示
+			for (var month = 1; month <= 12; month++) {
+				var option = document.createElement("option");
+				option.value = month;
+				option.textContent = month;
+				monthSelect.appendChild(option);
+			}
 
-            document.getElementById("showDatesButton").addEventListener("click", function() {
-                var selectedYear = yearSelect.value;
-                var selectedMonth = monthSelect.value;
-                showDatesAndDays(selectedYear, selectedMonth);
-            });
-        });
+		});
 
-        function showDatesAndDays(year, month) {
-            var date = new Date(year, month - 1, 1);
-            var lastDay = new Date(year, month, 0).getDate();
-            var dateTableBody = document.getElementById("dateTable").querySelector("tbody");
-            dateTableBody.innerHTML = "";
 
-            for (var day = 1; day <= lastDay; day++) {
-                var currentDate = new Date(year, month - 1, day);
-                var dayOfWeek = currentDate.toLocaleString('ja-JP', { weekday: 'short' });
-
-                var row = document.createElement("tr");
-                
-                var dateCell = document.createElement("td");
-                dateCell.textContent = `${month}/${day}`;
-                
-                var dayCell = document.createElement("td");
-                dayCell.textContent = dayOfWeek;
-                
-                var statusCell = document.createElement("td");
-                var startTimeCell = document.createElement("td");
-                var endTimeCell = document.createElement("td");
-                var remarksCell = document.createElement("td");
-
-                statusCell.textContent = "通常出勤";  // ここで勤務状況を設定します
-                startTimeCell.textContent = "09:00";  // ここで出勤時間を設定します
-                endTimeCell.textContent = "18:00";    // ここで退勤時間を設定します
-                remarksCell.textContent = "";         // ここで備考を設定します
-
-                row.appendChild(dateCell);
-                row.appendChild(dayCell);
-                row.appendChild(statusCell);
-                row.appendChild(startTimeCell);
-                row.appendChild(endTimeCell);
-                row.appendChild(remarksCell);
-                
-                dateTableBody.appendChild(row);
-            }
-        }
-    </script>
+	</script>
 
 </body>
 
