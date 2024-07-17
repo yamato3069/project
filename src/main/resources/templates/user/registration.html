@@ -9,79 +9,135 @@
 	<link th:href="@{/css/styles.css}" rel="stylesheet">
 
 	<style>
-		.divider {
-			border-top: 1px solid blue;
-			margin-top: 10px;
-			margin-bottom: 20px;
+		body {
+			font-family: Arial, sans-serif;
+			background-color: rgb(255, 255, 255);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.regist-container {
+			width: 500px;
+			padding: 20px;
+			border: 1px solid black;
+			border-radius: 8px;
+			background-color: #f9f9f9;
 		}
 
 		.form-row {
-			margin-bottom: 10px;
-		}
-
-		.button {
+			margin-bottom: 15px;
 			display: flex;
-			justify-content: flex-end;
 			align-items: center;
 		}
 
-		.button button {
+		.form-row label {
+			flex: 0 0 100px;
+			text-align: right;
+		}
+
+		.form-row input,
+		.form-row select {
+			flex: 1;
 			margin-left: 10px;
+		}
+
+		.divider {
+			border-top: 1px solid blue;
+			margin: 10px 0 20px;
+		}
+
+		.button-serch,
+		.button-regist {
+			background-color: yellow;
+			border: 1px solid black;
+			cursor: pointer;
+			align-items: center;
+		}
+
+		.button-regist {
+			margin-left: auto;
+		}
+
+		.error {
+			margin-top: 10px;
+			color: red;
+		}
+		
+
+		.success,
+		.delete {
+			margin-top: 10px;
+			color: blue;
+		}
+
+		.button-serch:hover,
+		.button-regist:hover {
+			background-color: gold;
 		}
 	</style>
 </head>
 
 <body>
-	<div class="container">
+	<div class="regist-container">
 		<form th:object="${userSerchForm}" th:action="@{/user/registration}" method="POST">
-			<div class="form-row align-items-center">
+			<div class="form-row">
 				<div class="col-md-2">
 					<label for="name">ユーザー名</label>
 					<input type="text" class="form-control" id="name" th:field="*{name}" />
-					<button class="btn btn-primary" type="submit" name="action" value="search">検索</button>
+					<button class="button-serch" type="submit" name="action" value="search">検索</button>
 				</div>
 			</div>
 
 			<div class="divider"></div>
-			<div class="form-row align-items-center">
+			<div class="form-row">
 				<div class="col-md-2">
 					<label for="userId">ユーザーID</label>
-					<input type="text" class="form-control" id="id" name="id"
-						th:value="${user != null ? user.id : userId}" />
+					<input type="hidden" id="id" name="id" th:value="${user != null ? user.id : userId}" />
+					<span th:text="${user != null ? user.id : userId}"></span> <!-- 表示用 -->
 				</div>
 			</div>
 
 
-			<div class="form-row align-items-center">
+			<div class="form-row">
 				<div class="col-md-2">
 					<label for="password">パスワード</label>
 					<input type="text" class="form-control" id="password" name="password"
-						th:value="${user != null ? user.password : ''}"/>
+						th:value="${user != null ? user.password : ''}" />
 				</div>
 			</div>
 
-			<div class="form-row align-items-center">
+			<div class="form-row">
 				<div class="col-md-2">
 					<label for="role">権限</label>
-					<input type="text" class="form-control" id="role" name="role"
-						th:value="${user != null ? user.role : ''}" />
+					<select class="form-control" id="role" name="role">
+						<option value="">選択してください</option>
+						<option value="Admin" th:selected="${user != null && user.role == 'Admin'}">管理者</option>
+						<option value="UnitManager" th:selected="${user != null && user.role == 'UnitManager'}">ユニットマネージャ</option>
+						<option value="Manager" th:selected="${user != null && user.role == 'Manager'}">マネージャ</option>
+						<option value="Regular" th:selected="${user != null && user.role == 'Regular'}">社員</option>
+					</select>
 				</div>
 			</div>
-			<div class="form-row align-items-center">
+			<div class="form-row">
 				<div class="col-md-2">
 					<label for="date">利用開始日</label>
 					<input type="text" class="form-control" id="startDate" name="startDate"
 						th:value="${user != null ? #dates.format(user.startDate, 'yyyy-MM-dd') : ''}" />
 				</div>
-				<div class="form-row align-items-center">
-					<div class="col-md-2">
-						<button class="btn btn-success" type="submit" name="action" value="register"
-							onclick="setRequiredFields()">登録</button>
-					</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-2">
+					<button class="button-regist " type="submit" name="action" value="register"
+						onclick="setRequiredFields()">登録</button>
 				</div>
 			</div>
+
 			<div class="error" th:if="${error}" th:text="${error}"></div>
 			<div class="success" th:if="${success}" th:text="${success}"></div>
+			<div class="delete" th:if="${delete}" th:text="${delete}"></div>
 		</form>
 	</div>
 

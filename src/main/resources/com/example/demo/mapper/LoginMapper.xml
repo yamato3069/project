@@ -42,4 +42,10 @@
 		
 </insert>
 
+<delete id="deleteUser" parameterType="com.example.demo.entity.LoginUser">
+	DELETE
+	FROM users
+	WHERE id = #{id}
+</delete>
+
 </mapper>

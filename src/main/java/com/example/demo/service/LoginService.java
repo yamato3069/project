@@ -29,4 +29,8 @@ public class LoginService {
     	int result = sqlSessionTemplate.insert("insertUser", loginUser);
         return result > 0;
     }
+    
+    public void deleteUser(Integer id) {
+    	loginMapper.deleteUser(id);
+    }
 }

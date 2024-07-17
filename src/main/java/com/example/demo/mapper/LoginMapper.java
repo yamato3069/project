@@ -20,4 +20,5 @@ public interface LoginMapper {
 			@Param("name") String name, @Param("role") String role,
 			@Param("startDate") Date startDate);
 
+	void deleteUser(@Param("id") Integer id);
 }
