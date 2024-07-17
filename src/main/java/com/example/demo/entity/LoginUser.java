@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
 import lombok.Data;
 
 @Data
+@Component
 public class LoginUser {
 	
     // ユーザーID
@@ -15,6 +18,6 @@ public class LoginUser {
     // 役職
     private String role;
     // 有効開始日
-    private Date start_date;
+    private Date startDate;
 
 }
