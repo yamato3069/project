@@ -17,16 +17,8 @@
 		<div class="header">
 
 
-			<!--			<div class="display-month">-->
-			<!--				<label for="display-month">表示年月：</label>-->
-			<!--				<select id="yearDropdown"></select>-->
-			<!--				<label for="yearDropdown">:年</label>-->
-			<!--				<select id="monthDropdown"></select>-->
-			<!--				<label for="monthDropdown">:月</label>-->
-			<!--				<div class="buttons"><button id="showDatesButton">表示</button></div>-->
-			<!--			</div>-->
 
-			<form id="attendanceForm" th:action="@{/attendance/show}" method="get">
+			<form id="AttendanceForm" th:action="@{/attendance/show}" method="get">
 				<div class="display-month">
 					<label for="yearDropdown">表示年月：</label>
 					<select id="yearDropdown" name="year"></select>
@@ -46,16 +38,19 @@
 
 
 
+			<form id="AttendanceForm" th:action="@{/attendance/submit}" method="post">
+				<div class="buttons">
+					<button>却下</button>
+					<button>承認</button>
+					<button>承認申請</button>
 
-			<div class="buttons">
-				<button>却下</button>
-				<button>承認</button>
-				<button>承認申請</button>
-				<button>登録</button>
-			</div>
+					<button type="submit">登録</button>
+
+				</div>
 
 
 		</div>
+	
 		<table class="approval-info">
 			<thead>
 				<tr>
@@ -93,15 +88,7 @@
 				</tr>
 			</thead>
 			<tbody id="dateTable">
-				<!-- 表示される内容はJavaScriptで動的に生成されます -->
-				<!--				<tr th:each="attendance : ${attendanceList}">-->
-				<!--					<td th:text="${attendance.date}">Date</td>-->
-				<!--					<td></td>-->
-				<!--					<td></td>-->
-				<!--					<td th:text="${attendance.startTime}">Start Time</td>-->
-				<!--					<td th:text="${attendance.endTime}">End Time</td>-->
-				<!--					<td th:text="${attendance.remarks}">Remarks</td>-->
-				<!--				</tr>-->
+
 
 				<tr th:each="calendera : ${calendar}">
 
@@ -125,57 +112,39 @@
 						</select>
 					</td>
 
-										<td>
-											<select name="startHour">
-												<option value=""></option>
-												<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
-													th:selected="${calendera.startTime?.hour == hour}"></option>
-											</select>
-											:
-											<select name="startMinute">
-												<option value=""></option>
-												<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}" th:text="${minute}"
-													th:selected="${calendera.startTime?.minute == minute}"></option>
-											</select>
-										</td>
-										<td>
-											<select name="endHour">
-												<option value=""></option>
-												<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
-													th:selected="${calendera.endTime?.hour == hour}"></option>
-											</select>
-											:
-											<select name="endMinute">
-												<option value=""></option>
-												<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}" th:text="${minute}"
-													th:selected="${calendera.endTime?.minute == minute}"></option>
-											</select>
-										</td>
-<!--					<td>-->
-<!--						<select th:field="*{startTime}">-->
-<!--							<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}" th:text="${hour}">-->
-<!--							</option>-->
-<!--						</select> :-->
-<!--						<select th:field="*{startTime}">-->
-<!--							<option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"-->
-<!--								th:text="${minute}"></option>-->
-<!--						</select>-->
-<!--					</td>-->
-<!--					<td>-->
-<!--						<select th:field="*{endTime}">-->
-<!--							<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}" th:text="${hour}">-->
-<!--							</option>-->
-<!--						</select> :-->
-<!--						<select th:field="*{endTime}">-->
-<!--							<option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"-->
-<!--								th:text="${minute}"></option>-->
-<!--						</select>-->
-<!--					</td>-->
-					<td th:text="${calendera.remarks}">Remarks</td>
+					<td>
+						<select name="startHour">
+							<option value=""></option>
+							<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
+								th:selected="${calendera.startTime?.hour == hour}"></option>
+						</select>
+						:
+						<select name="startMinute">
+							<option value=""></option>
+							<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
+								th:text="${minute}" th:selected="${calendera.startTime?.minute == minute}"></option>
+						</select>
+					</td>
+					<td>
+						<select name="endHour">
+							<option value=""></option>
+							<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
+								th:selected="${calendera.endTime?.hour == hour}"></option>
+						</select>
+						:
+						<select name="endMinute">
+							<option value=""></option>
+							<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
+								th:text="${minute}" th:selected="${calendera.endTime?.minute == minute}"></option>
+						</select>
+					</td>
+
+					<td><input type="text" name="remarks" th:value="${calendera.remarks}" /></td>
 				</tr>
 
 			</tbody>
 		</table>
+		</form>
 	</div>
 
 	<script>
