@@ -13,16 +13,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.dto.AttendanceDayDto;
 import com.example.demo.dto.AttendanceDto;
+import com.example.demo.entity.LoginUser;
 import com.example.demo.form.AttendanceForm;
 import com.example.demo.service.AttendanceService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/attendance")
 public class AttendanceController {
 
 	@RequestMapping("/regist")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-
+	public String hello(@RequestParam(value = "name", defaultValue = "World") String name, HttpSession session, Model model) {
+		LoginUser user = (LoginUser)session.getAttribute("user");
+		model.addAttribute("user",user);
 		System.out.println("regist");
 
 		return "attendance/regist";
@@ -34,8 +38,9 @@ public class AttendanceController {
 
 	@RequestMapping("/show")
 	public String getAttendance(@RequestParam(value = "year", required = false) Integer year,
-			@RequestParam(value = "month", required = false) Integer month, Model model) {
-
+			@RequestParam(value = "month", required = false) Integer month, Model model, HttpSession session) {
+		LoginUser user = (LoginUser)session.getAttribute("user");
+		model.addAttribute("user",user);
 		if (year == null || month == null) {
 			System.out.println("未入力");
 			//エラーメッセージの表示
@@ -68,7 +73,7 @@ public class AttendanceController {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
 			for (AttendanceDayDto day : calendar) {
 				String formattedDate = day.getDate().format(formatter);
-				System.out.println(formattedDate);
+//				System.out.println(formattedDate);
 				day.setFormattedDate(formattedDate); // AttendanceDayDtoにformattedDateフィールドを追加してください
 			}
 
@@ -89,8 +94,12 @@ public class AttendanceController {
 	}
 	
     @PostMapping("/submit")
-    public String submitAttendance(@ModelAttribute AttendanceForm form) {
-
+    public String submitAttendance(@ModelAttribute AttendanceForm attendanceForm) {
+    	
+    	System.out.println("登録");
+    	System.out.println(attendanceForm.getAttendanceDayDto());
+//    	System.out.println(((AttendanceDayDto) attendanceForm.getAttendanceDayDto()).getStatus());
+    	
         return "attendance/regist";
     }
 

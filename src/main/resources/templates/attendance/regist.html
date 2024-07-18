@@ -6,13 +6,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Page Example</title>
 	<link th:href="@{/css/styles.css}" rel="stylesheet">
+	<style>
+		.user-info p {
+			display: inline-block;
+			margin-right: 5px;
+			margin-left: 20px;
+		}
+
+		.user-info span {
+			display: inline-block;
+		}
+	</style>
 </head>
 
 <body>
 
 	<div class="container">
 		<div class="user-info">
-			<span>ユーザ名：XXXXXXXXXXXXXXXXXXXX　　　　　　　　ユーザID：XXXXXXXXXXXXXXX</span>
+			<p>ユーザ名：</p><span th:text="${user.name}"></span>
+			<p>ユーザID：</p><span th:text="${user.id}"></span>
 		</div>
 		<div class="header">
 
@@ -50,7 +62,7 @@
 
 
 		</div>
-	
+
 		<table class="approval-info">
 			<thead>
 				<tr>
@@ -95,7 +107,8 @@
 					<td th:text="${calendera.formattedDate}">Date</td>
 					<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
 					<td>
-						<select name="status">
+						<!--						<select name="status">-->
+						<select name="attendanceDayDto">
 							<option value="-1" th:selected="${calendera.status == null}"></option>
 							<option value="0" th:selected="${calendera.status == 0}">通常出勤</option>
 							<option value="1" th:selected="${calendera.status == 1}">休日</option>
@@ -113,26 +126,30 @@
 					</td>
 
 					<td>
-						<select name="startHour">
+						<!--						<select name="startHour">-->
+						<select name="attendanceDayDto">
 							<option value=""></option>
 							<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
 								th:selected="${calendera.startTime?.hour == hour}"></option>
 						</select>
 						:
-						<select name="startMinute">
+						<!--						<select name="startMinute">-->
+						<select name="attendanceDayDto">
 							<option value=""></option>
 							<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
 								th:text="${minute}" th:selected="${calendera.startTime?.minute == minute}"></option>
 						</select>
 					</td>
 					<td>
-						<select name="endHour">
+						<!--						<select name="endHour">-->
+						<select name="attendanceDayDto">
 							<option value=""></option>
 							<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
 								th:selected="${calendera.endTime?.hour == hour}"></option>
 						</select>
 						:
-						<select name="endMinute">
+						<!--						<select name="endMinute">-->
+						<select name="attendanceDayDto">
 							<option value=""></option>
 							<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
 								th:text="${minute}" th:selected="${calendera.endTime?.minute == minute}"></option>

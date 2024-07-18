@@ -10,6 +10,8 @@ import com.example.demo.entity.LoginUser;
 import com.example.demo.form.LoginForm;
 import com.example.demo.service.LoginService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/")
 public class LoginController {
@@ -22,17 +24,17 @@ public class LoginController {
 	}
 	
 	@RequestMapping("login")
-	public String loginUser(@ModelAttribute LoginForm loginForm, Model model) {
+	public String loginUser(@ModelAttribute LoginForm loginForm, Model model, HttpSession session) {
 	    LoginUser user = loginService.getLoginUsers(loginForm.getId());
 
 	    if (user != null && user.getPassword().equals(loginForm.getPassword())) {
-	        model.addAttribute("user", user);
+	        session.setAttribute("user", user);
 
 	        if ("Admin".equals(user.getRole())) {
 	            return "redirect:/user/registration";
 	        }
 
-	        return "attendance/regist";
+	        return "redirect:/attendance/regist";
 	        
 	    } else {
 	        model.addAttribute("error", "ユーザーIDまたはパスワードが正しくありません");
