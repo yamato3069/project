@@ -12,4 +12,7 @@ public interface AttendanceMapper {
 
 	List<AttendanceDto> findByYearAndMonth(@Param("year") int year, @Param("month") int month);
 	
+//	boolean insertAttendance(@Param("id") Integer id, @Param("userId") Integer userId, 
+//			@Param("status") Integer status, @Param("date") Date date, @Param("startTime") Time startTime,
+//			@Param("endTime") Time endTime, @Param("remarks") String remarks);
 }

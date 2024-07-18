@@ -84,7 +84,7 @@
 	<div class="regist-container">
 		<form th:object="${userSerchForm}" th:action="@{/user/registration}" method="POST">
 			<div class="form-row">
-				<div class="col-md-2">
+				<div>
 					<label for="name">ユーザー名</label>
 					<input type="text" class="form-control" id="name" th:field="*{name}" />
 					<button class="button-serch" type="submit" name="action" value="search">検索</button>
@@ -93,16 +93,16 @@
 
 			<div class="divider"></div>
 			<div class="form-row">
-				<div class="col-md-2">
-					<label for="userId">ユーザーID</label>
+				<div>
+					<label for="userId">ユーザーID　</label>
 					<input type="hidden" id="id" name="id" th:value="${user != null ? user.id : userId}" />
-					<span th:text="${user != null ? user.id : userId}"></span> <!-- 表示用 -->
+					<span th:text="${user != null ? user.id : userId}"></span> 
 				</div>
 			</div>
 
 
 			<div class="form-row">
-				<div class="col-md-2">
+				<div>
 					<label for="password">パスワード</label>
 					<input type="text" class="form-control" id="password" name="password"
 						th:value="${user != null ? user.password : ''}" />
@@ -110,8 +110,8 @@
 			</div>
 
 			<div class="form-row">
-				<div class="col-md-2">
-					<label for="role">権限</label>
+				<div>
+					<label for="role">　　権限　</label>
 					<select class="form-control" id="role" name="role">
 						<option value="">選択してください</option>
 						<option value="Admin" th:selected="${user != null && user.role == 'Admin'}">管理者</option>
@@ -122,14 +122,14 @@
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="col-md-2">
+				<div>
 					<label for="date">利用開始日</label>
 					<input type="text" class="form-control" id="startDate" name="startDate"
 						th:value="${user != null ? #dates.format(user.startDate, 'yyyy-MM-dd') : ''}" />
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="col-md-2">
+				<div>
 					<button class="button-regist " type="submit" name="action" value="register"
 						onclick="setRequiredFields()">登録</button>
 				</div>
