@@ -1,5 +1,7 @@
 package com.example.demo.mapper;
 
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -12,7 +14,9 @@ public interface AttendanceMapper {
 
 	List<AttendanceDto> findByYearAndMonth(@Param("year") int year, @Param("month") int month);
 	
-//	boolean insertAttendance(@Param("id") Integer id, @Param("userId") Integer userId, 
-//			@Param("status") Integer status, @Param("date") Date date, @Param("startTime") Time startTime,
-//			@Param("endTime") Time endTime, @Param("remarks") String remarks);
+	boolean insertAttendance(@Param("id") Integer id, @Param("userId") Integer userId, 
+			@Param("status") Integer status, @Param("date") Date date, @Param("startTime") LocalTime startTime,
+			@Param("endTime") LocalTime endTime, @Param("remarks") String remarks);
+	
+	void deleteAttendance(@Param("id") Integer id);
 }

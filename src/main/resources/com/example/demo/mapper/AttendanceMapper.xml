@@ -4,33 +4,47 @@
 
 	<select id="findByYearAndMonth"
 		resultType="com.example.demo.dto.AttendanceDto">
-		SELECT id AS Id,
-		user_id AS userId, status, date, start_time AS startTime, end_time AS
-		endTime, remarks FROM attendance WHERE YEAR(date) = #{year} AND
-		MONTH(date) = #{month};
+		SELECT 
+			id AS Id,
+			user_id AS userId, 
+			status, 
+			date, 
+			start_time AS startTime, 
+			end_time AS endTime, 
+			remarks 
+		FROM attendance 
+		WHERE
+			YEAR(date) = #{year} 
+			AND　MONTH(date) = #{month};
 	</select>
 
-	<insert id="insertAttendance"
-		parameterType="com.example.demo.dto.AttendanceDto">
+	<insert id="insertAttendance" parameterType="com.example.demo.dto.AttendanceDto">
 		INSERT INTO attendance
 		(
-		id
-		,user_id
-		,status
-		,date
-		,start_date
-		,end_time
-		,remarks
+			id
+			,user_id
+			,status
+			,date
+			,start_date
+			,end_time
+			,remarks
 		) VALUES (
-		#{id}
-		,#{userId}
-		,#{status}
-		,#{date}
-		,#{startDate}
-		,#{endTime}
-		,#{remarks}
+			#{id}
+			,#{userId}
+			,#{status}
+			,#{date}
+			,#{startDate}
+			,#{endTime}
+			,#{remarks}
 		)
 
 	</insert>
+
+	<delete id="deleteAttendance"
+		parameterType="com.example.demo.dto.AttendanceDto">
+		DELETE
+		FROM attendance
+		WHERE id = #{id}
+	</delete>
 
 </mapper>
