@@ -90,13 +90,7 @@ public class AttendanceController {
 	
     @PostMapping("/submit")
     public String submitAttendance(@ModelAttribute AttendanceForm form) {
-        System.out.println("登録: " + form);
-        for (AttendanceForm.AttendanceRecord record : form.getAttendances()) {
-            System.out.println("出勤状況: " + record.getStatus());
-            System.out.println("出勤時間: " + record.getStartHour() + ":" + record.getStartMinute());
-            System.out.println("退勤時間: " + record.getEndHour() + ":" + record.getEndMinute());
-            System.out.println("備考: " + record.getRemarks());
-        }
+
         return "attendance/regist";
     }
 
