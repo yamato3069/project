@@ -45,13 +45,13 @@ public class AttendanceController {
 	@RequestMapping("/show")
 	public String getAttendance(@RequestParam(value = "year", required = false) Integer year,
 			@RequestParam(value = "month", required = false) Integer month, Model model) {
-		
+
 		if (year == null || month == null) {
 			System.out.println("未入力");
 			//エラーメッセージの表示
 			String errorMessage = "未入力の項目があります";
 			model.addAttribute("errorMessage", errorMessage);
-			return "attendance/regist";			
+			return "attendance/regist";
 		} else {
 			System.out.println(year);
 			System.out.println(month);
@@ -72,13 +72,25 @@ public class AttendanceController {
 					}
 				}
 			}
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
 
-		    for (AttendanceDayDto day : calendar) {
-		        String formattedDate = day.getDate().format(formatter);
-		        System.out.println(formattedDate);
-		        day.setFormattedDate(formattedDate); // AttendanceDayDtoにformattedDateフィールドを追加してください
-		    }
+			//表示年月のフォーマットを整える
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
+			for (AttendanceDayDto day : calendar) {
+				String formattedDate = day.getDate().format(formatter);
+				System.out.println(formattedDate);
+				day.setFormattedDate(formattedDate); // AttendanceDayDtoにformattedDateフィールドを追加してください
+			}
+
+//			//開始時刻と終了時刻を時間と分に分ける
+//			for (AttendanceDayDto startTime : calendar) {
+//
+//				String sTimeStr = startTime.toString();
+//
+//				String[] sParts = sTimeStr.split(":");
+//				Integer sHour = Integer.parseInt(sParts[0]);
+//				Integer sMinute = Integer.parseInt(sParts[1]);
+//				System.out.println(sHour + ":" + sMinute);
+//			}
 
 			return "attendance/regist";
 		}

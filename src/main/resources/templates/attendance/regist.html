@@ -35,16 +35,16 @@
 					<label for="monthDropdown">月</label>
 					<div class="buttons"><button type="submit">表示</button></div>
 				</div>
-				
+
 				<th:block th:if="${errorMessage}">
-				<div class="d-flex flex-column">
-					<span th:text="'*' + '&nbsp' + ${errorMessage}" class="help-inline error"></span>
-				</div>
-			</th:block>
-			
+					<div class="d-flex flex-column">
+						<span th:text="'*' + '&nbsp' + ${errorMessage}" class="help-inline error"></span>
+					</div>
+				</th:block>
+
 			</form>
 
-			
+
 
 
 			<div class="buttons">
@@ -107,9 +107,70 @@
 
 					<td th:text="${calendera.formattedDate}">Date</td>
 					<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
-					<td></td>
-					<td th:text="${calendera.startTime}">Start Time</td>
-					<td th:text="${calendera.endTime}">End Time</td>
+					<td>
+						<select name="status">
+							<option value="-1" th:selected="${calendera.status == null}"></option>
+							<option value="0" th:selected="${calendera.status == 0}">通常出勤</option>
+							<option value="1" th:selected="${calendera.status == 1}">休日</option>
+							<option value="2" th:selected="${calendera.status == 2}">祝日</option>
+							<option value="3" th:selected="${calendera.status == 3}">遅刻</option>
+							<option value="4" th:selected="${calendera.status == 4}">有給</option>
+							<option value="5" th:selected="${calendera.status == 5}">欠勤</option>
+							<option value="6" th:selected="${calendera.status == 6}">早退</option>
+							<option value="7" th:selected="${calendera.status == 7}">時間外勤務</option>
+							<option value="8" th:selected="${calendera.status == 8}">振替出勤</option>
+							<option value="9" th:selected="${calendera.status == 9}">振替休日</option>
+							<option value="10" th:selected="${calendera.status == 10}">代替出勤</option>
+							<option value="11" th:selected="${calendera.status == 11}">代替休日</option>
+						</select>
+					</td>
+
+										<td>
+											<select name="startHour">
+												<option value=""></option>
+												<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
+													th:selected="${calendera.startTime?.hour == hour}"></option>
+											</select>
+											:
+											<select name="startMinute">
+												<option value=""></option>
+												<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}" th:text="${minute}"
+													th:selected="${calendera.startTime?.minute == minute}"></option>
+											</select>
+										</td>
+										<td>
+											<select name="endHour">
+												<option value=""></option>
+												<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
+													th:selected="${calendera.endTime?.hour == hour}"></option>
+											</select>
+											:
+											<select name="endMinute">
+												<option value=""></option>
+												<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}" th:text="${minute}"
+													th:selected="${calendera.endTime?.minute == minute}"></option>
+											</select>
+										</td>
+<!--					<td>-->
+<!--						<select th:field="*{startTime}">-->
+<!--							<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}" th:text="${hour}">-->
+<!--							</option>-->
+<!--						</select> :-->
+<!--						<select th:field="*{startTime}">-->
+<!--							<option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"-->
+<!--								th:text="${minute}"></option>-->
+<!--						</select>-->
+<!--					</td>-->
+<!--					<td>-->
+<!--						<select th:field="*{endTime}">-->
+<!--							<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}" th:text="${hour}">-->
+<!--							</option>-->
+<!--						</select> :-->
+<!--						<select th:field="*{endTime}">-->
+<!--							<option th:each="minute : ${#numbers.sequence(0, 59)}" th:value="${minute}"-->
+<!--								th:text="${minute}"></option>-->
+<!--						</select>-->
+<!--					</td>-->
 					<td th:text="${calendera.remarks}">Remarks</td>
 				</tr>
 
@@ -146,6 +207,7 @@
 				option.textContent = month;
 				monthSelect.appendChild(option);
 			}
+
 
 		});
 
