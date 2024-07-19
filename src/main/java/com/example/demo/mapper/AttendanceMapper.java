@@ -12,7 +12,7 @@ import com.example.demo.dto.AttendanceDto;
 @Mapper
 public interface AttendanceMapper {
 
-	List<AttendanceDto> findByYearAndMonth(@Param("year") int year, @Param("month") int month);
+	List<AttendanceDto> findByYearAndMonth(@Param("year") int year, @Param("month") int month, @Param("userId") int userId);
 	
 	boolean insertAttendance(@Param("id") Integer id, @Param("userId") Integer userId, 
 			@Param("status") Integer status, @Param("date") Date date, @Param("startTime") LocalTime startTime,

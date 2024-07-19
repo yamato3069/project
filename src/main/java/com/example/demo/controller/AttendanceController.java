@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.dto.AttendanceDayDto;
 import com.example.demo.dto.AttendanceDto;
 import com.example.demo.entity.LoginUser;
-import com.example.demo.form.AttendanceForm;
 import com.example.demo.service.AttendanceService;
 
 import jakarta.servlet.http.HttpSession;
@@ -39,8 +37,10 @@ public class AttendanceController {
 	@RequestMapping("/show")
 	public String getAttendance(@RequestParam(value = "year", required = false) Integer year,
 			@RequestParam(value = "month", required = false) Integer month, Model model, HttpSession session) {
+
 		LoginUser user = (LoginUser)session.getAttribute("user");
 		model.addAttribute("user",user);
+		int userId = user.getId();
 		if (year == null || month == null) {
 			System.out.println("未入力");
 			//エラーメッセージの表示
@@ -48,11 +48,11 @@ public class AttendanceController {
 			model.addAttribute("errorMessage", errorMessage);
 			return "attendance/regist";
 		} else {
-			System.out.println(year);
-			System.out.println(month);
+//			System.out.println(year);
+//			System.out.println(month);
 			List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 			model.addAttribute("calendar", calendar);
-			List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month);
+			List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
 			model.addAttribute("attendanceList", attendanceList);
 			// attendanceListの要素をcalendarの要素と比較して値を設定する
 			for (AttendanceDayDto day : calendar) {
@@ -87,17 +87,17 @@ public class AttendanceController {
 //				Integer sMinute = Integer.parseInt(sParts[1]);
 //				System.out.println(sHour + ":" + sMinute);
 //			}
-
+			
 			return "attendance/regist";
 		}
 
 	}
 	
     @PostMapping("/submit")
-    public String submitAttendance(@ModelAttribute AttendanceForm attendanceForm) {
+    public String submitAttendance() {
     	
     	System.out.println("登録");
-    	System.out.println(attendanceForm.getAttendanceDayDto());
+//    	System.out.println(attendanceForm.getAttendanceDayDto());
 //    	System.out.println(((AttendanceDayDto) attendanceForm.getAttendanceDayDto()).getStatus());
     	
         return "attendance/regist";
