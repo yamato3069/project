@@ -34,11 +34,11 @@ public class AttendanceService {
 	@Autowired
 	private AttendanceMapper attendanceMapper;
 
-	public List<AttendanceDto> findByYearAndMonth(int year, int month) {
+	public List<AttendanceDto> findByYearAndMonth(int year, int month, int userId) {
 
 		System.out.println("findByYearAndMonth");
 
-		List<AttendanceDto> attendanceDtoList = attendanceMapper.findByYearAndMonth(year, month);
+		List<AttendanceDto> attendanceDtoList = attendanceMapper.findByYearAndMonth(year, month, userId);
 		
 //		for(AttendanceDto attendancedto :) {
 //			

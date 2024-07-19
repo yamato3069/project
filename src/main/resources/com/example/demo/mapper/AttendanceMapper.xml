@@ -5,16 +5,16 @@
 	<select id="findByYearAndMonth"
 		resultType="com.example.demo.dto.AttendanceDto">
 		SELECT
-		id AS Id,
-		user_id AS userId,
-		status,
-		date,
-		start_time AS startTime,
-		end_time AS endTime,
-		remarks
-		FROM attendance
-		WHERE
-		YEAR(date) = #{year} AND MONTH(date) = #{month};
+		t1.id AS Id,
+		t1.user_id AS userId,
+		t1.status,
+		t1.date,
+		t1.start_time AS startTime,
+		t1.end_time AS endTime,
+		t1.remarks
+		FROM attendance t1
+		WHERE		 
+		YEAR(date) = #{year} AND MONTH(date) = #{month} AND user_id = #{userId};
 	</select>
 
 	<insert id="insertAttendance"
