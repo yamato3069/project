@@ -1,12 +1,9 @@
 package com.example.demo.entity;
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Data;
 
 @Data
-@Component
 public class LoginUser {
 	
     // ユーザーID

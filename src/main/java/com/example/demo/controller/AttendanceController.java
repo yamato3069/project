@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.dto.AttendanceDayDto;
 import com.example.demo.dto.AttendanceDto;
 import com.example.demo.entity.LoginUser;
+import com.example.demo.form.AttendanceForm;
+import com.example.demo.form.AttendanceFormList;
 import com.example.demo.service.AttendanceService;
 
 import jakarta.servlet.http.HttpSession;
@@ -34,9 +37,8 @@ public class AttendanceController {
 	@Autowired
 	private AttendanceService attendanceService;
 
-	@RequestMapping("/show")
-	public String getAttendance(@RequestParam(value = "year", required = false) Integer year,
-			@RequestParam(value = "month", required = false) Integer month, Model model, HttpSession session) {
+	@RequestMapping(path = "/show",params ="show")
+	public String getAttendance(Integer year, Integer month,@ModelAttribute AttendanceFormList attendanceFormList,@RequestParam String show, Model model, HttpSession session) {
 
 		LoginUser user = (LoginUser)session.getAttribute("user");
 		model.addAttribute("user",user);
@@ -76,27 +78,19 @@ public class AttendanceController {
 //				System.out.println(formattedDate);
 				day.setFormattedDate(formattedDate); // AttendanceDayDtoにformattedDateフィールドを追加してください
 			}
-
-//			//開始時刻と終了時刻を時間と分に分ける
-//			for (AttendanceDayDto startTime : calendar) {
-//
-//				String sTimeStr = startTime.toString();
-//
-//				String[] sParts = sTimeStr.split(":");
-//				Integer sHour = Integer.parseInt(sParts[0]);
-//				Integer sMinute = Integer.parseInt(sParts[1]);
-//				System.out.println(sHour + ":" + sMinute);
-//			}
 			
 			return "attendance/regist";
 		}
 
 	}
 	
-    @PostMapping("/submit")
-    public String submitAttendance() {
-    	
+    @PostMapping(path = "/show", params = "register")
+    public String submitAttendance(@ModelAttribute AttendanceFormList attendanceFormList,@RequestParam String register ,Model model, HttpSession session, @ModelAttribute AttendanceForm attendanceForm) {
+		LoginUser user = (LoginUser)session.getAttribute("user");
+		model.addAttribute("user",user);
     	System.out.println("登録");
+    	System.out.print(attendanceFormList);
+    	System.out.print(attendanceForm);
 //    	System.out.println(attendanceForm.getAttendanceDayDto());
 //    	System.out.println(((AttendanceDayDto) attendanceForm.getAttendanceDayDto()).getStatus());
     	
