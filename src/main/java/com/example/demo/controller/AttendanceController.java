@@ -33,6 +33,7 @@ public class AttendanceController {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 
+		//マネージャー側の初期表示
 		return "attendance/regist";
 	}
 

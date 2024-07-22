@@ -27,6 +27,7 @@
 			<div class="user-info">
 				<p>ユーザ名：</p><span th:text="${user.name}"></span>
 				<p>ユーザID：</p><span name="userId" th:text="${user.id}"></span>
+				<p>ステータス</p><span>未申請</span>
 				<input type="hidden" name="userId" th:value="${user.id}">
 			</div>
 			<div class="header">
@@ -80,7 +81,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<nav>●●　××</nav>
+							<nav><a href= "https://blog.codecamp.jp/programming-html-a" >アンカーテキスト</a></nav>
 						</td>
 						<td>2024/5/1</td>
 						<td>2024/5/30</td>
@@ -112,7 +113,7 @@
 
 						<td name="formattedDate" th:text="${calendera.formattedDate}">Date</td>
 						<input type="hidden" name="formattedDate" th:value="${calendera.formattedDate}">
-						<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
+						<td th:text="${calendera.formattedWeek}">formattedWeek</td>
 						<td>
 							<select name="status">
 								<option value="-1" th:selected="${calendera.status == null}"></option>
