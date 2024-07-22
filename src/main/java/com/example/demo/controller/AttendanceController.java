@@ -53,6 +53,8 @@ public class AttendanceController {
 //			System.out.println(year);
 //			System.out.println(month);
 			List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
+			model.addAttribute("selectedYear", year);
+			model.addAttribute("selectedMonth", month);
 			model.addAttribute("calendar", calendar);
 			List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
 			model.addAttribute("attendanceList", attendanceList);
@@ -85,9 +87,11 @@ public class AttendanceController {
 	}
 	
     @PostMapping(path = "/show", params = "register")
-    public String submitAttendance(@ModelAttribute AttendanceFormList attendanceFormList,@RequestParam String register ,Model model, HttpSession session, @ModelAttribute AttendanceForm attendanceForm) {
+    public String submitAttendance(Integer year, Integer month,@ModelAttribute AttendanceFormList attendanceFormList,@RequestParam String register ,Model model, HttpSession session, @ModelAttribute AttendanceForm attendanceForm) {
 		LoginUser user = (LoginUser)session.getAttribute("user");
 		model.addAttribute("user",user);
+		model.addAttribute("selectedYear", year);
+		model.addAttribute("selectedMonth", month);
     	System.out.println("登録");
     	System.out.print(attendanceFormList);
     	System.out.print(attendanceForm);

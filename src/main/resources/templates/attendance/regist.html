@@ -33,14 +33,23 @@
 
 				<div class="display-month">
 					<label for="yearDropdown">表示年月：</label>
-					<select id="yearDropdown" name="year"></select>
+					<select id="yearDropdown" name="year">
+						<option value=""></option>
+						<option th:each="year : ${#numbers.sequence(2000, 2100)}" th:value="${year}" th:text="${year}"
+							th:selected="${year == selectedYear}"></option>
+					</select>
 					<label for="yearDropdown">年</label>
-					<select id="monthDropdown" name="month"></select>
+					<!--					<select id="monthDropdown" name="month"></select>-->
+					<select id="yearDropdown" name="month">
+						<option value=""></option>
+						<option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"
+							th:selected="${month == selectedMonth}"></option>
+					</select>
 					<label for="monthDropdown">月</label>
 					<div class="buttons">
 						<button type="submit" name="show">表示</button>
 					</div>
-					<!--					<input type ="hidden" userid=userid >-->
+
 				</div>
 
 				<th:block th:if="${errorMessage}">
@@ -165,6 +174,8 @@
 			defaultOption.value = "";
 			defaultOption.textContent = "";
 			yearSelect.appendChild(defaultOption);
+			// ス沖表示保持
+
 			// 2000年から2100年まで表示
 			for (var year = 2000; year <= 2100; year++) {
 				var option = document.createElement("option");
