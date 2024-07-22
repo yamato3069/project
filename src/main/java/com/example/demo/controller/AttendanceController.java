@@ -31,6 +31,8 @@ public class AttendanceController {
 	public String hello(@RequestParam(value = "Name", defaultValue = "World") String name, HttpSession session,
 			Model model) {
 		LoginUser user = (LoginUser) session.getAttribute("user");
+		AttendanceFormList attendanceFormList = new AttendanceFormList();
+        model.addAttribute("attendanceFormList", attendanceFormList);
 		model.addAttribute("user", user);
 
 		return "attendance/regist";
@@ -43,6 +45,8 @@ public class AttendanceController {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 		int userId = user.getId();
+		model.addAttribute("attendanceFormList", attendanceFormList);
+		
 		model.addAttribute("selectedYear", year);
 		model.addAttribute("selectedMonth", month);
 		if (year == null || month == null) {
@@ -76,8 +80,10 @@ public class AttendanceController {
 			for (AttendanceDayDto day : calendar) {
 				String formattedDate = day.getDate().format(formatter);
 				day.setFormattedDate(formattedDate);
+				System.out.println("Date: " + day.getDate() + " Formatted Date: " + formattedDate);
 			}
 
+			
 			return "attendance/regist";
 		}
 
@@ -119,9 +125,7 @@ public class AttendanceController {
 		}
 		System.out.println("登録");
 		System.out.print(attendanceFormList);
-		System.out.print(attendanceForm);
-
-
+		System.out.print("koko" + attendanceForm);
 		return "attendance/regist";
 	}
 
