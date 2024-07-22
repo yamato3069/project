@@ -26,7 +26,7 @@ public class AttendanceDayDto {
 	// コンストラクタ
 	public AttendanceDayDto(LocalDate date) {
 		this.date = date;
-		this.dayOfWeek = date.getDayOfWeek();
+//		this.dayOfWeek = date.getDayOfWeek();
 		this.formattedWeek = DateUtil.getDayOfWeek(date);
 		
 	}
