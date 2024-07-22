@@ -21,7 +21,7 @@
 
 <body>
 
-	<form id="AttendanceForm" th:action="@{/attendance/show}" method="POST">
+	<form id="AttendanceForm" th:action="@{/attendance/show}" th:object="${attendanceFormList}" method="POST">
 
 		<div class="container">
 			<div class="user-info">
@@ -81,7 +81,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<nav><a href= "https://blog.codecamp.jp/programming-html-a" >アンカーテキスト</a></nav>
+							<nav><a href="https://blog.codecamp.jp/programming-html-a">アンカーテキスト</a></nav>
 						</td>
 						<td>2024/5/1</td>
 						<td>2024/5/30</td>
@@ -109,13 +109,18 @@
 				<tbody id="dateTable">
 
 
-					<tr th:each="calendera : ${calendar}">
+					<tr th:each="calendera, iter : ${calendar}">
 
-						<td name="formattedDate" th:text="${calendera.formattedDate}">Date</td>
-						<input type="hidden" name="formattedDate" th:value="${calendera.formattedDate}">
-						<td th:text="${calendera.formattedWeek}">formattedWeek</td>
+
+						<td th:text="${calendera.formattedDate}"></td>
+						<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
+						<div>
+							<input type="hidden" th:field="*{attendanceForm[__${iter.index}__].formattedDate}"
+								th:value="${calendera.formattedDate}" />
+						</div>
+
 						<td>
-							<select name="status">
+							<select th:field="*{attendanceForm[__${iter.index}__].status}">
 								<option value="-1" th:selected="${calendera.status == null}"></option>
 								<option value="0" th:selected="${calendera.status == 0}">通常出勤</option>
 								<option value="1" th:selected="${calendera.status == 1}">休日</option>
@@ -133,33 +138,34 @@
 						</td>
 
 						<td>
-							<select name="startHour">
+							<select th:field="*{attendanceForm[__${iter.index}__].startHour}">
 								<option value=""></option>
 								<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
 									th:selected="${calendera.startTime?.hour == hour}"></option>
 							</select>
 							:
-							<select name="startMinute">
+							<select th:field="*{attendanceForm[__${iter.index}__].startMinute}">
 								<option value=""></option>
 								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
 									th:text="${minute}" th:selected="${calendera.startTime?.minute == minute}"></option>
 							</select>
 						</td>
 						<td>
-							<select name="endHour">
+							<select th:field="*{attendanceForm[__${iter.index}__].endHour}">
 								<option value=""></option>
 								<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
 									th:selected="${calendera.endTime?.hour == hour}"></option>
 							</select>
 							:
-							<select name="endMinute">
+							<select th:field="*{attendanceForm[__${iter.index}__].endMinute}">
 								<option value=""></option>
 								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
 									th:text="${minute}" th:selected="${calendera.endTime?.minute == minute}"></option>
 							</select>
 						</td>
 
-						<td><input type="text" name="remarks" th:value="${calendera.remarks}" /></td>
+						<td><input type="text" th:field="*{attendanceForm[__${iter.index}__].remarks}"
+								th:value="${calendera.remarks}" /></td>
 					</tr>
 
 				</tbody>
