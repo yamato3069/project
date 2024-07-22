@@ -39,7 +39,6 @@
 							th:selected="${year == selectedYear}"></option>
 					</select>
 					<label for="yearDropdown">年</label>
-					<!--					<select id="monthDropdown" name="month"></select>-->
 					<select id="yearDropdown" name="month">
 						<option value=""></option>
 						<option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"

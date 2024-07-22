@@ -23,12 +23,7 @@ public class AttendanceDayDto {
 	public AttendanceDayDto(LocalDate date) {
 		this.date = date;
 		this.dayOfWeek = date.getDayOfWeek();
-//		this.status = status;
-//		this.startTime = startTime;
-//		this.endTime = endTime;
-//		this.remarks = remarks;
-//		this.Id = Id;
-//		this.userId = userId;
+
 	}
 
 
