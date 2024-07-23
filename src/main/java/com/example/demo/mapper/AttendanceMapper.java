@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.dto.AttendanceDto;
+import com.example.demo.dto.MonthlyAttendanceReqDto;
 
 @Mapper
 public interface AttendanceMapper {
@@ -19,4 +20,6 @@ public interface AttendanceMapper {
 			@Param("endTime") LocalTime endTime, @Param("remarks") String remarks);
 	
 	void deleteAttendance(@Param("id") Integer id);
+	
+	List<MonthlyAttendanceReqDto> findAttendanceReq();
 }

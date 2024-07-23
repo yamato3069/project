@@ -21,7 +21,7 @@
 
 <body>
 
-	<form id="AttendanceForm" th:action="@{/attendance/show}" th:object="${attendanceFormList}" method="POST">
+	<form id="AttendanceForm" th:action="@{/attendance/show}" method="POST">
 
 		<div class="container">
 			<div class="user-info">
@@ -36,7 +36,7 @@
 					<label for="yearDropdown">表示年月：</label>
 					<select id="yearDropdown" name="year">
 						<option value=""></option>
-						<option th:each="year : ${#numbers.sequence(2000, 2100)}" th:value="${year}" th:text="${year}"
+						<option th:each="year : ${#numbers.sequence(2020, 2025)}" th:value="${year}" th:text="${year}"
 							th:selected="${year == selectedYear}"></option>
 					</select>
 					<label for="yearDropdown">年</label>
@@ -79,20 +79,21 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>
-							<nav><a href="https://blog.codecamp.jp/programming-html-a">アンカーテキスト</a></nav>
-						</td>
-						<td>2024/5/1</td>
-						<td>2024/5/30</td>
-					</tr>
-					<tr>
-						<td>
-							<nav>△△　▲▲</nav>
-						</td>
-						<td>2024/5/1</td>
-						<td>2024/5/31</td>
-					</tr>
+					<form th:action="@{/attendance/show}" name="requestForm" method="POST">
+						<tr th:each="reqList : ${attendanceReqList}">
+							<td>
+								<!--							<nav><a href= "https://blog.codecamp.jp/programming-html-a" >[[*{reqList.name}]]</a></nav>-->
+								<nav><a href="#" onclick="submitForm(this)"
+										data-target-year-month="[[${reqList.targetYearMonth}]]">
+										[[${reqList.name}]]
+									</a>
+								</nav>
+							</td>
+							<td th:text="${reqList.targetYearMonth}">2024/5/1</td>
+							<td th:text="${reqList.date}"></td>
+							<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
+						</tr>
+					</form>
 				</tbody>
 			</table>
 			<table class="attendance-info">
@@ -109,18 +110,13 @@
 				<tbody id="dateTable">
 
 
-					<tr th:each="calendera, iter : ${calendar}">
+					<tr th:each="calendera : ${calendar}">
 
-
-						<td th:text="${calendera.formattedDate}"></td>
-						<td th:text="${calendera.dayOfWeek}">dayOfWeek</td>
-						<div>
-							<input type="hidden" th:field="*{attendanceForm[__${iter.index}__].formattedDate}"
-								th:value="${calendera.formattedDate}" />
-						</div>
-
+						<td name="formattedDate" th:text="${calendera.formattedDate}">Date</td>
+						<input type="hidden" name="formattedDate" th:value="${calendera.formattedDate}">
+						<td th:text="${calendera.formattedWeek}">formattedWeek</td>
 						<td>
-							<select th:field="*{attendanceForm[__${iter.index}__].status}">
+							<select name="status">
 								<option value="-1" th:selected="${calendera.status == null}"></option>
 								<option value="0" th:selected="${calendera.status == 0}">通常出勤</option>
 								<option value="1" th:selected="${calendera.status == 1}">休日</option>
@@ -138,34 +134,34 @@
 						</td>
 
 						<td>
-							<select th:field="*{attendanceForm[__${iter.index}__].startHour}">
+							<select name="startHour">
 								<option value=""></option>
-								<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
-									th:selected="${calendera.startTime?.hour == hour}"></option>
+								<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}"
+									th:text="${hour}" th:selected="${calendera.startHour == hour}"></option>
 							</select>
+
 							:
-							<select th:field="*{attendanceForm[__${iter.index}__].startMinute}">
+							<select name="startMinute">
 								<option value=""></option>
 								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
-									th:text="${minute}" th:selected="${calendera.startTime?.minute == minute}"></option>
+									th:text="${minute}" th:selected="${calendera.startMinute == minute}"></option>
 							</select>
 						</td>
 						<td>
-							<select th:field="*{attendanceForm[__${iter.index}__].endHour}">
+							<select name="endHour">
 								<option value=""></option>
 								<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
-									th:selected="${calendera.endTime?.hour == hour}"></option>
+									th:selected="${calendera.endHour == hour}"></option>
 							</select>
 							:
-							<select th:field="*{attendanceForm[__${iter.index}__].endMinute}">
+							<select name="endMinute">
 								<option value=""></option>
 								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
-									th:text="${minute}" th:selected="${calendera.endTime?.minute == minute}"></option>
+									th:text="${minute}" th:selected="${calendera.endMinute == minute}"></option>
 							</select>
 						</td>
 
-						<td><input type="text" th:field="*{attendanceForm[__${iter.index}__].remarks}"
-								th:value="${calendera.remarks}" /></td>
+						<td><input type="text" name="remarks" th:value="${calendera.remarks}" /></td>
 					</tr>
 
 				</tbody>
@@ -180,10 +176,9 @@
 			defaultOption.value = "";
 			defaultOption.textContent = "";
 			yearSelect.appendChild(defaultOption);
-			// ス沖表示保持
 
 			// 2000年から2100年まで表示
-			for (var year = 2000; year <= 2100; year++) {
+			for (var year = 2020; year <= 2025; year++) {
 				var option = document.createElement("option");
 				option.value = year;
 				option.textContent = year;
@@ -202,6 +197,27 @@
 				option.value = month;
 				option.textContent = month;
 				monthSelect.appendChild(option);
+			}
+			// リンク押下でコントローラを呼び出す
+			function submitForm(link) {
+				var form = document.createElement('form');
+				form.method = 'POST';
+				form.action = '/attendance/show';
+
+				var hiddenField = document.createElement('input');
+				hiddenField.type = 'hidden';
+				hiddenField.name = 'targetYearMonth';
+				hiddenField.value = link.getAttribute('data-target-year-month');
+				form.appendChild(hiddenField);
+
+				var requestField = document.createElement('input');
+				requestField.type = 'hidden';
+				requestField.name = 'request';
+				requestField.value = 'request';
+				form.appendChild(requestField);
+
+				document.body.appendChild(form);
+				form.submit();
 			}
 
 

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.dto.AttendanceDayDto;
 import com.example.demo.dto.AttendanceDto;
+import com.example.demo.dto.MonthlyAttendanceReqDto;
 import com.example.demo.entity.LoginUser;
 import com.example.demo.form.AttendanceForm;
 import com.example.demo.form.AttendanceFormList;
 import com.example.demo.service.AttendanceService;
+import com.example.demo.service.LoginService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,6 +29,8 @@ public class AttendanceController {
 	
 	@Autowired
 	private AttendanceService attendanceService;
+	@Autowired
+	private LoginService loginService;
 
 	@RequestMapping("/regist")
 	public String hello(@RequestParam(value = "Name", defaultValue = "World") String name, HttpSession session,
@@ -34,29 +39,54 @@ public class AttendanceController {
 		AttendanceFormList attendanceFormList = new AttendanceFormList();
         model.addAttribute("attendanceFormList", attendanceFormList);
 		model.addAttribute("user", user);
+		
+		// マネージャーのみ。承認申請者の取得
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for(MonthlyAttendanceReqDto req :attendanceReqList) {
+			for(LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
 
-		//マネージャー側の初期表示
 		return "attendance/regist";
 	}
 
 	@RequestMapping(path = "/show", params = "show")
 	public String getAttendance(Integer year, Integer month, @ModelAttribute AttendanceFormList attendanceFormList,
 			@RequestParam String show, Model model, HttpSession session) {
-
+		
+		// マネージャーのみ。承認申請者の取得
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for(MonthlyAttendanceReqDto req :attendanceReqList) {
+			for(LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
+		
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 		int userId = user.getId();
 		model.addAttribute("attendanceFormList", attendanceFormList);
-		
 		model.addAttribute("selectedYear", year);
 		model.addAttribute("selectedMonth", month);
+		
 		if (year == null || month == null) {
 			System.out.println("未入力");
 			//エラーメッセージの表示
 			String errorMessage = "未入力の項目があります";
 			model.addAttribute("errorMessage", errorMessage);
 			return "attendance/regist";
+			
 		} else {
+			
 			List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 			model.addAttribute("calendar", calendar);
 			List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
@@ -69,8 +99,13 @@ public class AttendanceController {
 						day.setId(attendance.getId());
 						day.setStatus(attendance.getStatus());
 						day.setStartTime(attendance.getStartTime());
+						day.setStartHour(attendance.getStartTime().getHour());
+						day.setStartMinute(attendance.getStartTime().getMinute());
 						day.setEndTime(attendance.getEndTime());
+						day.setEndHour(attendance.getEndTime().getHour());
+						day.setEndMinute(attendance.getEndTime().getMinute());
 						day.setRemarks(attendance.getRemarks());
+						System.out.println(day.getStartHour());
 						break;
 					}
 				}
@@ -81,7 +116,7 @@ public class AttendanceController {
 			for (AttendanceDayDto day : calendar) {
 				String formattedDate = day.getDate().format(formatter);
 				day.setFormattedDate(formattedDate);
-				System.out.println("Date: " + day.getDate() + " Formatted Date: " + formattedDate);
+//				System.out.println("Date: " + day.getDate() + " Formatted Date: " + formattedDate);
 			}
 
 			
@@ -94,6 +129,19 @@ public class AttendanceController {
 	public String submitAttendance(Integer year, Integer month, @ModelAttribute AttendanceFormList attendanceFormList,
 			@RequestParam String register, Model model, HttpSession session,
 			@ModelAttribute AttendanceForm attendanceForm) {
+		
+		// マネージャーのみ。承認申請者の取得
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for(MonthlyAttendanceReqDto req :attendanceReqList) {
+			for(LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
+		
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 		int userId = user.getId();
@@ -129,5 +177,12 @@ public class AttendanceController {
 		System.out.print("koko" + attendanceForm);
 		return "attendance/regist";
 	}
+	
+	@PostMapping(path = "/show", params = "request")
+	public String getRequest(@RequestParam("targetYearMonth")LocalDate targetYearMonth) {
+		System.out.println("リンク押下");
+		System.out.println(targetYearMonth);
+		return "attendance/regist";
+	};
 
 }

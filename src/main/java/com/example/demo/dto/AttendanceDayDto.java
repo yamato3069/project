@@ -18,7 +18,11 @@ public class AttendanceDayDto {
 	private LocalDate date;
 	private DayOfWeek dayOfWeek;
 	private LocalTime startTime;
+	private Integer startHour;
+	private Integer startMinute;
 	private LocalTime endTime;
+	private Integer endHour;
+	private Integer endMinute;
 	private String remarks;
 	private String formattedDate; // フォーマット済みの日付
 	private String formattedWeek; // フォーマット済みの曜日
@@ -26,7 +30,6 @@ public class AttendanceDayDto {
 	// コンストラクタ
 	public AttendanceDayDto(LocalDate date) {
 		this.date = date;
-//		this.dayOfWeek = date.getDayOfWeek();
 		this.formattedWeek = DateUtil.getDayOfWeek(date);
 		
 	}

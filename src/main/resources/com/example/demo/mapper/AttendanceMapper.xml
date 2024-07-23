@@ -49,5 +49,16 @@
 <!--		YEAR(date) = #{year}-->
 <!--		AND MONTH(date) = #{month};-->
 	</delete>
+	
+	<select id="findAttendanceReq"
+		resultType="com.example.demo.dto.MonthlyAttendanceReqDto">
+		SELECT
+		id AS Id,
+		user_id AS userId,
+		target_year_month AS targetYearMonth,
+		date,
+		is_approved AS status
+		FROM monthly_attendance_req
+	</select>
 
 </mapper>

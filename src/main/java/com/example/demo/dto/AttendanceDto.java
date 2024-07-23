@@ -22,9 +22,12 @@ public class AttendanceDto {
 	private DayOfWeek dayOfWeek;
 	//勤務開始時刻
 	private LocalTime startTime;
+
 	//勤務終了時刻
 	private LocalTime endTime;
+
 	//備考
 	private String remarks;
+	
 
 }
