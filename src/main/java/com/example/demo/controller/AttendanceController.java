@@ -172,16 +172,16 @@ public class AttendanceController {
 			String formattedDate = day.getDate().format(formatter);
 			day.setFormattedDate(formattedDate);
 		}
-		System.out.println("登録");
-		System.out.print(attendanceFormList);
-		System.out.print("koko" + attendanceForm);
+//		System.out.println("登録");
+//		System.out.print(attendanceFormList);
+//		System.out.print("koko" + attendanceForm);
 		return "attendance/regist";
 	}
 	
 	@PostMapping(path = "/show", params = "request")
 	public String getRequest(@RequestParam("targetYearMonth")LocalDate targetYearMonth) {
-		System.out.println("リンク押下");
-		System.out.println(targetYearMonth);
+//		System.out.println("リンク押下");
+//		System.out.println(targetYearMonth);
 		return "attendance/regist";
 	};
 
