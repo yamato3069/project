@@ -207,9 +207,12 @@ public class AttendanceController {
 			@RequestParam("userId") String userIdStr, Model model, HttpSession session) {
 		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr);
 		Integer userId = Integer.parseInt(userIdStr);
-		
+		Integer targetYear = targetYearMonth.getYear();
+		Integer targetMonth = targetYearMonth.getMonthValue();
 		System.out.println("リンク押下");
 		System.out.println(targetYearMonth);
+		System.out.println(targetYear);
+		System.out.println(targetMonth);
 		System.out.println(userId);
 		// "Property or field 'name' cannot be found on null"を回避
 		LoginUser user = (LoginUser) session.getAttribute("user");
