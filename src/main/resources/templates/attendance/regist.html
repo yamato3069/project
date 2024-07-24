@@ -40,7 +40,7 @@
 							th:selected="${year == selectedYear}"></option>
 					</select>
 					<label for="yearDropdown">年</label>
-					<select id="yearDropdown" name="month">
+					<select id="monthDropdown" name="month">
 						<option value=""></option>
 						<option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"
 							th:selected="${month == selectedMonth}"></option>
@@ -79,24 +79,60 @@
 					</tr>
 				</thead>
 				<tbody>
-					<form th:action="@{/attendance/show}" name="requestForm" method="POST">
-						<tr th:each="reqList : ${attendanceReqList}">
+					<form name="request" method="POST">
+						<tr th:each="reqList : ${attendanceReqList}" th:data-target-year-month="${reqList.targetYearMonth}"
+							th:data-user-id="${reqList.userId}">
 							<td>
-								<!--							<nav><a href= "https://blog.codecamp.jp/programming-html-a" >[[*{reqList.name}]]</a></nav>-->
-								<nav><a href="#" onclick="submitForm(this)"
-										data-target-year-month="[[${reqList.targetYearMonth}]]">
+								<nav><a href="javascript:void(0);" onclick="applicant(this);">
 										[[${reqList.name}]]
 									</a>
 								</nav>
 							</td>
-							<td th:text="${reqList.targetYearMonth}">2024/5/1</td>
-							<td th:text="${reqList.date}"></td>
+							<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
+							<td th:text="${reqList.date}">申請日の表示</td>
 							<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
+							<input type="hidden" th:value="${reqList.userId}" name="userId">
 						</tr>
 					</form>
 				</tbody>
 			</table>
+
+
+			<!--			テストリンク-->
+			<a href="javascript:void(0);" onclick="handleClick();">
+				クリック
+			</a>
+
+			<script>
+				// リンクから呼び出しテスト
+				function handleClick() {
+					// 開発者ツールのコンソールに表示される。eclipseには出ない。
+					console.log('関数呼び出し');
+					// fetch APIを使って、コントローラーのエンドポイント /attendance/test にGETリクエストを送信
+					fetch('/attendance/test')
+				}
+
+				function applicant(linkElement) {
+					// リンクが属する最も近い＜tr＞タグを取得
+					const trElement = linkElement.closest('tr');
+					// 確定した＜tr＞タグからそれぞれの値を取得
+					const targetYearMonth = trElement.getAttribute('data-target-year-month');
+					const userId = trElement.getAttribute('data-user-id');
+
+					// サーバーにリクエストを送信
+					fetch('/attendance/request', {
+						method: 'POST',
+						body: new URLSearchParams({
+							targetYearMonth: targetYearMonth,
+							userId: userId
+						})
+					})
+				}
+			</script>
+
+
 			<table class="attendance-info">
+
 				<thead>
 					<tr>
 						<th>日付</th>
@@ -108,7 +144,6 @@
 					</tr>
 				</thead>
 				<tbody id="dateTable">
-
 
 					<tr th:each="calendera : ${calendar}">
 
@@ -163,68 +198,12 @@
 
 						<td><input type="text" name="remarks" th:value="${calendera.remarks}" /></td>
 					</tr>
-
 				</tbody>
 			</table>
 		</div>
 	</form>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var yearSelect = document.getElementById("yearDropdown");
-			// 初期表示は未入力状態
-			var defaultOption = document.createElement("option");
-			defaultOption.value = "";
-			defaultOption.textContent = "";
-			yearSelect.appendChild(defaultOption);
-
-			// 2000年から2100年まで表示
-			for (var year = 2020; year <= 2025; year++) {
-				var option = document.createElement("option");
-				option.value = year;
-				option.textContent = year;
-				yearSelect.appendChild(option);
-			}
-
-			var monthSelect = document.getElementById("monthDropdown");
-			// 初期表示は未入力状態
-			defaultOption = document.createElement("option");
-			defaultOption.value = "";
-			defaultOption.textContent = "";
-			monthSelect.appendChild(defaultOption);
-			// 1月から12月まで表示
-			for (var month = 1; month <= 12; month++) {
-				var option = document.createElement("option");
-				option.value = month;
-				option.textContent = month;
-				monthSelect.appendChild(option);
-			}
-			// リンク押下でコントローラを呼び出す
-			function submitForm(link) {
-				var form = document.createElement('form');
-				form.method = 'POST';
-				form.action = '/attendance/show';
-
-				var hiddenField = document.createElement('input');
-				hiddenField.type = 'hidden';
-				hiddenField.name = 'targetYearMonth';
-				hiddenField.value = link.getAttribute('data-target-year-month');
-				form.appendChild(hiddenField);
-
-				var requestField = document.createElement('input');
-				requestField.type = 'hidden';
-				requestField.name = 'request';
-				requestField.value = 'request';
-				form.appendChild(requestField);
-
-				document.body.appendChild(form);
-				form.submit();
-			}
 
 
-		});
-
-
-	</script>
 
 </body>
 

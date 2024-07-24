@@ -19,18 +19,24 @@ public class AttendanceService {
 	
 	@Autowired
 	private AttendanceMapper attendanceMapper;
-
+	
 	public List<AttendanceDayDto> generateCalendar(int year, int month) {
 		
+		// 指定年月から月始めと月末の日付を取得
 		YearMonth yearMonth = YearMonth.of(year, month);
 		LocalDate firstDayOfMonth = yearMonth.atDay(1);
 		LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-		List<AttendanceDayDto> calendar = new ArrayList<>();
 
+		// 空のインスタンスを生成
+		List<AttendanceDayDto> calendar = new ArrayList<>();
+		
 		for (LocalDate date = firstDayOfMonth; !date.isAfter(lastDayOfMonth); date = date.plusDays(1)) {
-			// 初期値として空のフィールドでAttendanceDayDyoを作成
+			
+			// コンストラクタで日付と曜日をセット（それ以外は全部空）
 			AttendanceDayDto attendanceDayDto = new AttendanceDayDto(date);
+			
 			calendar.add(attendanceDayDto);
+			
 		}
 
 		return calendar;
