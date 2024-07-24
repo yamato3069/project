@@ -98,19 +98,7 @@
 			</table>
 
 
-			<!--			テストリンク-->
-			<a href="javascript:void(0);" onclick="handleClick();">
-				クリック
-			</a>
-
 			<script>
-				// リンクから呼び出しテスト
-				function handleClick() {
-					// 開発者ツールのコンソールに表示される。eclipseには出ない。
-					console.log('関数呼び出し');
-					// fetch APIを使って、コントローラーのエンドポイント /attendance/test にGETリクエストを送信
-					fetch('/attendance/test')
-				}
 
 				function applicant(linkElement) {
 					// リンクが属する最も近い＜tr＞タグを取得
