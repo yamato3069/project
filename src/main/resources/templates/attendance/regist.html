@@ -16,6 +16,13 @@
 		.user-info span {
 			display: inline-block;
 		}
+		.success {
+			color: blue;
+		}
+		.error {
+			color: red;
+		}
+		
 	</style>
 </head>
 
@@ -30,6 +37,7 @@
 				<p>ステータス</p><span>未申請</span>
 				<input type="hidden" name="userId" th:value="${user.id}">
 			</div>
+			<div class="success" th:if="${success}" th:text="${success}"></div>
 			<div class="header">
 
 				<div class="display-month">
@@ -131,60 +139,47 @@
 						<th>備考</th>
 					</tr>
 				</thead>
-				<tbody id="dateTable">
+				<tbody id="dateTable" th:if="${formList != null}">
+					<tr th:each="form, iter : ${formList.attendanceForm}">
 
-					<tr th:each="calendera : ${calendar}">
-
-						<td name="formattedDate" th:text="${calendera.formattedDate}">Date</td>
-						<input type="hidden" name="formattedDate" th:value="${calendera.formattedDate}">
-						<td th:text="${calendera.formattedWeek}">formattedWeek</td>
+						<td th:text="${form.formattedDate}"></td>
+						<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].formattedDate}"
+							th:value="${form.formattedDate}">
+						<td th:text="${form.formattedWeek}">dayOfWeek</td>
 						<td>
-							<select name="status">
-								<option value="-1" th:selected="${calendera.status == null}"></option>
-								<option value="0" th:selected="${calendera.status == 0}">通常出勤</option>
-								<option value="1" th:selected="${calendera.status == 1}">休日</option>
-								<option value="2" th:selected="${calendera.status == 2}">祝日</option>
-								<option value="3" th:selected="${calendera.status == 3}">遅刻</option>
-								<option value="4" th:selected="${calendera.status == 4}">有給</option>
-								<option value="5" th:selected="${calendera.status == 5}">欠勤</option>
-								<option value="6" th:selected="${calendera.status == 6}">早退</option>
-								<option value="7" th:selected="${calendera.status == 7}">時間外勤務</option>
-								<option value="8" th:selected="${calendera.status == 8}">振替出勤</option>
-								<option value="9" th:selected="${calendera.status == 9}">振替休日</option>
-								<option value="10" th:selected="${calendera.status == 10}">代替出勤</option>
-								<option value="11" th:selected="${calendera.status == 11}">代替休日</option>
+							<select th:field="*{formList.attendanceForm[__${iter.index}__].status}">
+								<option value="99" th:selected="${form.status == null || form.status == ''}">未選択
+								</option>
+								<option value="0" th:selected="${form.status == 0}">通常出勤</option>
+								<option value="1" th:selected="${form.status == 1}">休日</option>
+								<option value="2" th:selected="${form.status == 2}">祝日</option>
+								<option value="3" th:selected="${form.status == 3}">遅刻</option>
+								<option value="4" th:selected="${form.status == 4}">有給</option>
+								<option value="5" th:selected="${form.status == 5}">欠勤</option>
+								<option value="6" th:selected="${form.status == 6}">早退</option>
+								<option value="7" th:selected="${form.status == 7}">時間外勤務</option>
+								<option value="8" th:selected="${form.status == 8}">振替出勤</option>
+								<option value="9" th:selected="${form.status == 9}">振替休日</option>
+								<option value="10" th:selected="${form.status == 10}">代替出勤</option>
+								<option value="11" th:selected="${form.status == 11}">代替休日</option>
 							</select>
 						</td>
 
 						<td>
-							<select name="startHour">
-								<option value=""></option>
-								<option th:each="hour : ${#numbers.sequence(0, 23)}" th:value="${hour}"
-									th:text="${hour}" th:selected="${calendera.startHour == hour}"></option>
-							</select>
-
-							:
-							<select name="startMinute">
-								<option value=""></option>
-								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
-									th:text="${minute}" th:selected="${calendera.startMinute == minute}"></option>
-							</select>
+							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
+								th:value="${form.startTime}" />
 						</td>
 						<td>
-							<select name="endHour">
-								<option value=""></option>
-								<option th:each="hour : ${#numbers.sequence(0,23)}" th:value="${hour}" th:text="${hour}"
-									th:selected="${calendera.endHour == hour}"></option>
-							</select>
-							:
-							<select name="endMinute">
-								<option value=""></option>
-								<option th:each="minute : ${#numbers.sequence(0,59)}" th:value="${minute}"
-									th:text="${minute}" th:selected="${calendera.endMinute == minute}"></option>
-							</select>
+							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
+								th:value="${form.endTime}" />
 						</td>
 
-						<td><input type="text" name="remarks" th:value="${calendera.remarks}" /></td>
+						<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
+								th:value="${form.remarks}" /></td>
+						<th:block>
+							<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
+								th:value="${form.date}" />
+						</th:block>
 					</tr>
 				</tbody>
 			</table>

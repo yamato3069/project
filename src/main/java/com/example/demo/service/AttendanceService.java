@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.AttendanceDayDto;
 import com.example.demo.dto.AttendanceDto;
 import com.example.demo.dto.MonthlyAttendanceReqDto;
+import com.example.demo.entity.AttendanceEntity;
 import com.example.demo.mapper.AttendanceMapper;
 
 @Service
@@ -19,24 +20,18 @@ public class AttendanceService {
 	
 	@Autowired
 	private AttendanceMapper attendanceMapper;
-	
+
 	public List<AttendanceDayDto> generateCalendar(int year, int month) {
 		
-		// 指定年月から月始めと月末の日付を取得
 		YearMonth yearMonth = YearMonth.of(year, month);
 		LocalDate firstDayOfMonth = yearMonth.atDay(1);
 		LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
-
-		// 空のインスタンスを生成
 		List<AttendanceDayDto> calendar = new ArrayList<>();
-		
+
 		for (LocalDate date = firstDayOfMonth; !date.isAfter(lastDayOfMonth); date = date.plusDays(1)) {
-			
-			// コンストラクタで日付と曜日をセット（それ以外は全部空）
+			// 初期値として空のフィールドでAttendanceDayDyoを作成
 			AttendanceDayDto attendanceDayDto = new AttendanceDayDto(date);
-			
 			calendar.add(attendanceDayDto);
-			
 		}
 
 		return calendar;
@@ -60,5 +55,14 @@ public class AttendanceService {
 		
 		return attendanceReqList;
 	}
+	
+	 public boolean insertAttendance(AttendanceEntity attendanceEntity) {
+	        int result = attendanceMapper.insertAttendance(attendanceEntity);
+	        return result > 0;
+    }
+	 
+	   public void deleteAttendance(Integer userId) {
+	    	attendanceMapper.deleteAttendance(userId);
+	    }
 
 }

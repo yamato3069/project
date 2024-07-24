@@ -18,22 +18,20 @@
 	</select>
 
 	<insert id="insertAttendance"
-		parameterType="com.example.demo.dto.AttendanceDto">
+		parameterType="com.example.demo.entity.AttendanceEntity">
 		INSERT INTO attendance
 		(
-		id
-		,user_id
+		user_id
 		,status
 		,date
-		,start_date
+		,start_Time
 		,end_time
 		,remarks
 		) VALUES (
-		#{id}
-		,#{userId}
+		#{userId}
 		,#{status}
 		,#{date}
-		,#{startDate}
+		,#{startTime}
 		,#{endTime}
 		,#{remarks}
 		)
@@ -41,13 +39,11 @@
 	</insert>
 
 	<delete id="deleteAttendance"
-		parameterType="com.example.demo.dto.AttendanceDto">
+		parameterType="com.example.demo.entity.AttendanceEntity">
 		DELETE
 		FROM attendance
 		WHERE
-		id = #{id}
-<!--		YEAR(date) = #{year}-->
-<!--		AND MONTH(date) = #{month};-->
+		user_id = #{userId}
 	</delete>
 	
 	<select id="findAttendanceReq"
