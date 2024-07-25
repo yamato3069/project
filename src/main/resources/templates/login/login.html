@@ -1,82 +1,87 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ログイン</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: rgb(255, 255, 255);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ログイン</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: rgb(255, 255, 255);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
 			font-weight: 300;
-        }
+		}
 
-        .login-container {
-            width: 300px; 
-            padding: 20px;
-            border: 1px solid black;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		.login-container {
+			width: 300px;
+			padding: 20px;
+			border: 1px solid black;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 			font-weight: 300;
-        }
-		
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 17px;
-        }
+		}
 
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
+		.form-group {
+			display: flex;
+			flex-direction: column;
+			margin-bottom: 17px;
+		}
+
+		.form-group label {
+			font-weight: bold;
+			margin-bottom: 5px;
 			font-weight: 300;
-        }
+		}
 
-        .form-group input {
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid black;
-            border-radius: 4px;
-        }
+		.form-group input {
+			padding: 8px;
+			font-size: 16px;
+			border: 1px solid black;
+			border-radius: 4px;
+		}
 
-        .form-group input[type="submit"] {
-            background-color: yellow;
-            color: rgb(0, 0, 0);
-            border: 1px solid black;
-            cursor: pointer;
-        }
+		.form-group input[type="submit"] {
+			background-color: yellow;
+			color: rgb(0, 0, 0);
+			border: 1px solid black;
+			cursor: pointer;
+		}
 
-        .form-group input[type="submit"]:hover {
-            background-color: rgb(247, 247, 0);
-        }
+		.form-group input[type="submit"]:hover {
+			background-color: rgb(247, 247, 0);
+		}
 
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+		.error {
+			color: red;
+			margin-top: 10px;
+		}
+	</style>
 </head>
+
 <body>
-    <div class="login-container">
-        <form th:action="@{/login}" method="post" th:object="${loginForm}">
-            <div class="form-group">
-                <label for="userId">ユーザID:</label>
-                <input type="text" id="id" name="id" required th:value="${loginForm.id}" />
-            </div>
-            <div class="form-group">
-                <label for="password">パスワード:</label>
-                <input type="password" id="password" name="password" required th:value="${loginForm.password}" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="ログイン" />
-            </div>
-            <div class="error" th:if="${error}" th:text="${error}"></div>
-        </form>
-    </div>
+	<div class="login-container">
+		<form th:action="@{/login}" method="post" th:object="${loginForm}">
+			<div class="form-group">
+				<label for="userId">ユーザID:</label>
+				<input type="text" id="id" name="id" th:value="${loginForm.id}" />
+				<div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+			</div>
+			<div class="form-group">
+				<label for="password">パスワード:</label>
+				<input type="password" id="password" name="password" th:value="${loginForm.password}" />
+				<div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="ログイン" />
+			</div>
+			<div class="error" th:if="${error}" th:text="${error}"></div>
+		</form>
+	</div>
 </body>
+
 </html>
