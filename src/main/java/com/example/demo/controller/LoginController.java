@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,28 +18,33 @@ import jakarta.servlet.http.HttpSession;
 public class LoginController {
 	@Autowired
 	private LoginService loginService;
-	
+
 	@RequestMapping("")
 	public String login(@ModelAttribute LoginForm loginForm) {
 		return "login/login";
 	}
-	
+
 	@RequestMapping("login")
-	public String loginUser(@ModelAttribute LoginForm loginForm, Model model, HttpSession session) {
-	    LoginUser user = loginService.getLoginUsers(loginForm.getId());
+	public String loginUser(@ModelAttribute LoginForm loginForm, BindingResult result, Model model,
+			HttpSession session) {
+		LoginUser user = loginService.getLoginUsers(loginForm.getId());
+		loginService.checkLoginUser(loginForm, result);
+		if (result.hasErrors()) {
+			return "login/login";
+		}
 
-	    if (user != null && user.getPassword().equals(loginForm.getPassword())) {
-	        session.setAttribute("user", user);
+		if (user != null && user.getPassword().equals(loginForm.getPassword())) {
+			session.setAttribute("user", user);
 
-	        if ("Admin".equals(user.getRole())) {
-	            return "redirect:/user/registration";
-	        }
+			if ("Admin".equals(user.getRole())) {
+				return "redirect:/user/registration";
+			}
 
-	        return "redirect:/attendance/regist";
-	        
-	    } else {
-	        model.addAttribute("error", "ユーザーIDまたはパスワードが正しくありません");
-	        return "login/login";
-	    }
+			return "redirect:/attendance/regist";
+
+		} else {
+			model.addAttribute("error", "ユーザーIDまたはパスワードが正しくありません");
+			return "login/login";
+		}
 	}
 }

@@ -50,7 +50,7 @@
 			margin: 10px 0 20px;
 		}
 
-		.button-serch{
+		.button-serch {
 			background-color: yellow;
 			border: 1px solid black;
 			cursor: pointer;
@@ -60,19 +60,19 @@
 		}
 
 		.button-regist {
-					background-color: yellow;
-					border: 1px solid black;
-					cursor: pointer;
-					align-items: center;
-					margin-left: 315px;
-					border-radius: 3px;
-				}
-				
+			background-color: yellow;
+			border: 1px solid black;
+			cursor: pointer;
+			align-items: center;
+			margin-left: 315px;
+			border-radius: 3px;
+		}
+
 		.error {
 			margin-top: 10px;
 			color: red;
 		}
-		
+
 
 		.success,
 		.delete {
@@ -94,16 +94,18 @@
 				<div>
 					<label for="name">ユーザー名</label>
 					<input type="text" class="form-control" id="name" th:field="*{name}" />
-					<button class="button-serch" type="submit" name="action" value="search">検索</button>
+					<button class="button-serch" type="submit" name="search" value="search">検索</button>
+					<div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 				</div>
 			</div>
+			<div class="error" th:if="${nameError}" th:text="${nameError}"></div>
 
 			<div class="divider"></div>
 			<div class="form-row">
 				<div>
 					<label for="userId">ユーザーID　</label>
 					<input type="hidden" id="id" name="id" th:value="${user != null ? user.id : userId}" />
-					<span th:text="${user != null ? user.id : userId}"></span> 
+					<span th:text="${user != null ? user.id : userId}"></span>
 				</div>
 			</div>
 
@@ -113,6 +115,7 @@
 					<label for="password">パスワード</label>
 					<input type="text" class="form-control" id="password" name="password"
 						th:value="${user != null ? user.password : ''}" />
+					<div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
 				</div>
 			</div>
 
@@ -122,22 +125,25 @@
 					<select class="form-control" id="role" name="role">
 						<option value="">選択してください</option>
 						<option value="Admin" th:selected="${user != null && user.role == 'Admin'}">管理者</option>
-						<option value="UnitManager" th:selected="${user != null && user.role == 'UnitManager'}">ユニットマネージャ</option>
+						<option value="UnitManager" th:selected="${user != null && user.role == 'UnitManager'}">
+							ユニットマネージャ</option>
 						<option value="Manager" th:selected="${user != null && user.role == 'Manager'}">マネージャ</option>
 						<option value="Regular" th:selected="${user != null && user.role == 'Regular'}">社員</option>
 					</select>
+					<div class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
 				</div>
 			</div>
 			<div class="form-row">
 				<div>
 					<label for="date">利用開始日</label>
 					<input type="text" class="form-control" id="startDate" name="startDate"
-						th:value="${user != null ? #dates.format(user.startDate, 'yyyy-MM-dd') : ''}" />
+						th:value="${user != null ? #dates.format(user.startDate, 'yyyy/MM/dd') : ''}" />
+					<div class="error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
 				</div>
 			</div>
 			<div class="form-row">
 				<div>
-					<button class="button-regist " type="submit" name="action" value="register"
+					<button class="button-regist " type="submit" name="register" value="register"
 						onclick="setRequiredFields()">登録</button>
 				</div>
 			</div>
@@ -148,16 +154,6 @@
 		</form>
 	</div>
 
-
-	<script>
-		function setRequiredFields() {
-			document.getElementById('name').setAttribute('required', 'required');
-			document.getElementById('id').setAttribute('required', 'required');
-			document.getElementById('password').setAttribute('required', 'required');
-			document.getElementById('role').setAttribute('required', 'required');
-			document.getElementById('startDate').setAttribute('required', 'required');
-		}
-	</script>
 </body>
 
 

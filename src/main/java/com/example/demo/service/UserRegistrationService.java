@@ -4,8 +4,11 @@ import java.security.SecureRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import com.example.demo.entity.LoginUser;
+import com.example.demo.form.UserSerchForm;
 import com.example.demo.mapper.LoginMapper;
 
 @Service
@@ -28,4 +31,28 @@ public class UserRegistrationService {
 		return loginMapper.serchUsers(name);
 	}
 
+	public void validateUserSerch(UserSerchForm userSerchForm, BindingResult result) {
+		if(userSerchForm.getName().isEmpty()) {
+			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
+		}
+	}
+	
+	public void validateUserRegist(UserSerchForm userSerchForm, BindingResult result) {
+		if(userSerchForm.getName().isEmpty()) {
+			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
+		}
+		if(userSerchForm.getPassword().isEmpty() || userSerchForm.getPassword().length() > 16 || !userSerchForm.getPassword().matches("[a-zA-Z0-9]*")) {
+			result.addError(new FieldError("userSerchForm", "password", "パスワードは半角英数字16文字以内で入力してください。"));
+		}
+		if(userSerchForm.getRole().isEmpty()) {
+			result.addError(new FieldError("userSerchForm", "role", "権限を選択してください。"));
+		}
+		if(userSerchForm.getStartDate().isEmpty()) {
+			result.addError(new FieldError("userSerchForm", "startDate", "利用開始日を入力してください。"));
+		}else if(!userSerchForm.getStartDate().matches("\\d{4}/\\d{2}/\\d{2}")) {	
+			result.addError(new FieldError("userSerchForm", "startDate", "日付は'yyyy/MM/dd'の形式で入力してください。"));
+		}
+		
+	}
+	
 }
