@@ -34,12 +34,18 @@ public class UserRegistrationService {
 	public void validateUserSerch(UserSerchForm userSerchForm, BindingResult result) {
 		if(userSerchForm.getName().isEmpty()) {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
+		}else if(userSerchForm.getName().length() > 20 ) {
+			result.addError(new FieldError("userSerchForm", "name", "ユーザー名は20文字以内で入力してください。"));
 		}
 	}
 	
 	public void validateUserRegist(UserSerchForm userSerchForm, BindingResult result) {
 		if(userSerchForm.getName().isEmpty()) {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
+		}else if(userSerchForm.getName().length() > 20 ) {
+			result.addError(new FieldError("userSerchForm", "name", "ユーザー名は20文字以内で入力してください。"));
+		}else if (userSerchForm.getName().matches(".*[\\p{InBasicLatin}].*")) {
+		    result.addError(new FieldError("userSerchForm", "name", "ユーザー名は全角文字で入力してください。"));
 		}
 		if(userSerchForm.getPassword().isEmpty() || userSerchForm.getPassword().length() > 16 || !userSerchForm.getPassword().matches("[a-zA-Z0-9]*")) {
 			result.addError(new FieldError("userSerchForm", "password", "パスワードは半角英数字16文字以内で入力してください。"));

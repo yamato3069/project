@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,12 +37,22 @@ public class LoginController {
 		}
 
 		if (user != null && user.getPassword().equals(loginForm.getPassword())) {
+
+			Date today = new Date();
+			Date startDate = user.getStartDate();
+
+			if (startDate.after(today)) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+				String formattedStartDate = formatter.format(startDate);
+				model.addAttribute("error", "利用開始日は " + formattedStartDate + " です");
+				return "login/login";
+			}
+
 			session.setAttribute("user", user);
 
 			if ("Admin".equals(user.getRole())) {
 				return "redirect:/user/registration";
 			}
-
 			return "redirect:/attendance/regist";
 
 		} else {

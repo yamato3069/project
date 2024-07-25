@@ -23,9 +23,9 @@ public class LoginService {
 		return loginMapper.findAllUsers();
 	}
 	
-    public LoginUser getLoginUsers(String string) {   	
+    public LoginUser getLoginUsers(String id) {   	
     	
-    	return loginMapper.getLoginUsers(string);
+    	return loginMapper.getLoginUsers(id);
     }
 
     public boolean insertUser(LoginUser loginUser) {
@@ -40,9 +40,13 @@ public class LoginService {
     public void checkLoginUser(LoginForm loginForm, BindingResult result) {
     	if(loginForm.getId().isEmpty()) {
     		result.addError(new FieldError("loginForm", "id", "ユーザーIDを入力してください"));
-    	}
+    		
+    	}else if(loginForm.getId().length() > 16)
+    		result.addError(new FieldError("loginForm", "id", "16文字以内で入力してください。"));
+    	
     	if(loginForm.getPassword().isEmpty()) {
     		result.addError(new FieldError("loginForm", "password", "パスワードを入力してください"));
-    	}
+    	}else if(loginForm.getPassword().length() > 16)
+    		result.addError(new FieldError("loginForm", "password", "16文字以内で入力してください。"));
     }
 }
