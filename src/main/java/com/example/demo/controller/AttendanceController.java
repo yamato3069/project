@@ -36,7 +36,7 @@ public class AttendanceController {
 
 	// 初期表示
 	@RequestMapping("/regist")
-	public String hello(@RequestParam(value = "Name", defaultValue = "World") String name, HttpSession session,
+	public String hello(HttpSession session,
 			Model model) {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		AttendanceFormList attendanceFormList = new AttendanceFormList();
@@ -61,7 +61,7 @@ public class AttendanceController {
 	// 『表示』ボタン押下
 	@RequestMapping(path = "/show", params = "show")
 	public String getAttendance(Integer year, Integer month,
-			@RequestParam String show, @ModelAttribute AttendanceFormList attendanceFormList, Model model,
+			@ModelAttribute AttendanceFormList attendanceFormList, Model model,
 			HttpSession session) {
 
 		// マネージャーのみ。承認申請者の取得
@@ -132,6 +132,8 @@ public class AttendanceController {
 			}
 			formList.setAttendanceForm(form);
 			model.addAttribute("formList", formList);
+			System.out.println(formList);
+			System.out.println("表示");
 			return "attendance/regist";
 		}
 
@@ -174,7 +176,6 @@ public class AttendanceController {
 					day.setStartTime(attendance.getStartTime());
 					day.setEndTime(attendance.getEndTime());
 					day.setRemarks(attendance.getRemarks());
-					break;
 				}
 			}
 		}
@@ -195,34 +196,85 @@ public class AttendanceController {
 
 		return "attendance/regist";
 	}
-
-	@RequestMapping(path = "/test")
-	public String test(Model model, HttpSession session) {
-		System.out.println("コントローラー呼び出し");
-		// "Property or field 'name' cannot be found on null"を回避
-		LoginUser user = (LoginUser) session.getAttribute("user");
-		model.addAttribute("user", user);
-
-		return "attendance/regist";
-	}
-
+	
+	// リンク押下
 	@RequestMapping(path = "/request")
 	public String request(@RequestParam("targetYearMonth") String targetYearMonthStr,
-			@RequestParam("userId") String userIdStr, Model model, HttpSession session) {
+			@RequestParam("userId") String userIdStr, @ModelAttribute AttendanceFormList attendanceFormList,
+			Model model, HttpSession session) {
+
+		// String型からLocalDate型に変換
 		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr);
-		Integer userId = Integer.parseInt(userIdStr);
-
-		Integer targetYear = targetYearMonth.getYear();
-		Integer targetMonth = targetYearMonth.getMonthValue();
-
-		System.out.println("リンク押下");
 		System.out.println(targetYearMonth);
-		System.out.println(targetYear);
-		System.out.println(targetMonth);
-		System.out.println(userId);
-		// "Property or field 'name' cannot be found on null"を回避
+		// String型からInteger型に変換
+		Integer userId = Integer.parseInt(userIdStr);
+		// 年を抽出
+		Integer year = targetYearMonth.getYear();
+		// 月を抽出
+		Integer month = targetYearMonth.getMonthValue();
+		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
+		// 
+		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
+
+		List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
+
+		// attendanceListの要素をcalendarの要素と比較して値を設定する
+		for (AttendanceDayDto day : calendar) {
+			for (AttendanceDto attendance : attendanceList) {
+				if (day.getDate().equals(attendance.getDate())) {
+					day.setId(attendance.getId());
+					day.setStatus(attendance.getStatus());
+					day.setStartTime(attendance.getStartTime());
+					day.setEndTime(attendance.getEndTime());
+					day.setRemarks(attendance.getRemarks());
+					break;
+				}
+			}
+		}
+
+		AttendanceFormList formList = new AttendanceFormList();
+		List<AttendanceForm> form = new ArrayList<AttendanceForm>();
+		formList.setAttendanceForm(form);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
+		for (AttendanceDayDto day2 : calendar) {
+
+			AttendanceForm attendanceForm = new AttendanceForm();
+			attendanceForm.setId(day2.getId());
+			attendanceForm.setUserId(userId);
+			attendanceForm.setStatus(day2.getStatus());
+			attendanceForm.setDate(day2.getDate());
+			attendanceForm.setDayOfWeek(day2.getDayOfWeek());
+			attendanceForm.setStartTime(day2.getStartTime());
+			attendanceForm.setEndTime(day2.getEndTime());
+			attendanceForm.setRemarks(day2.getRemarks());
+			String formattedDate = day2.getDate().format(formatter);
+			attendanceForm.setFormattedDate(formattedDate);
+			attendanceForm.setFormattedWeek(day2.getFormattedWeek());
+			form.add(attendanceForm);
+		}
+		formList.setAttendanceForm(form);
+		model.addAttribute("formList", formList);
+		System.out.println(user);
+		System.out.println("?" + formList);
+		System.out.println("リンク押下");
+		System.out.println("申請対象日:" + targetYearMonth);
+		System.out.println("年:" + year);
+		System.out.println("月:" + month);
+		System.out.println("ユーザーID:" + userId);
+
+		// マネージャーのみ。承認申請者の取得
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for (MonthlyAttendanceReqDto req : attendanceReqList) {
+			for (LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
 
 		return "attendance/regist";
 	};

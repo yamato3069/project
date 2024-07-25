@@ -40,8 +40,6 @@ public class AttendanceService {
 	public List<AttendanceDto> findByYearAndMonth(int year, int month, int userId) {
 
 		List<AttendanceDto> attendanceDtoList = attendanceMapper.findByYearAndMonth(year, month, userId);		
-				
-//		System.out.println(attendanceDtoList);
 
 		return attendanceDtoList;
 
@@ -50,18 +48,19 @@ public class AttendanceService {
 	public List<MonthlyAttendanceReqDto> findAttendanceReq() {
 		
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceMapper.findAttendanceReq();
-//		
-//		System.out.println(attendanceReqList);
 		
 		return attendanceReqList;
 	}
 	
 	 public boolean insertAttendance(AttendanceEntity attendanceEntity) {
+		 
 	        int result = attendanceMapper.insertAttendance(attendanceEntity);
+	        
 	        return result > 0;
     }
 	 
 	   public void deleteAttendance(Integer userId) {
+		   
 	    	attendanceMapper.deleteAttendance(userId);
 	    }
 

@@ -87,7 +87,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<form name="request" method="POST">
+<!--					<form name="request" method="POST">-->
 						<tr th:each="reqList : ${attendanceReqList}" th:data-target-year-month="${reqList.targetYearMonth}"
 							th:data-user-id="${reqList.userId}">
 							<td>
@@ -101,30 +101,12 @@
 							<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
 							<input type="hidden" th:value="${reqList.userId}" name="userId">
 						</tr>
-					</form>
+<!--					</form>-->
 				</tbody>
 			</table>
 
 
-			<script>
 
-				function applicant(linkElement) {
-					// リンクが属する最も近い＜tr＞タグを取得
-					const trElement = linkElement.closest('tr');
-					// 確定した＜tr＞タグからそれぞれの値を取得
-					const targetYearMonth = trElement.getAttribute('data-target-year-month');
-					const userId = trElement.getAttribute('data-user-id');
-
-					// サーバーにリクエストを送信
-					fetch('/attendance/request', {
-						method: 'POST',
-						body: new URLSearchParams({
-							targetYearMonth: targetYearMonth,
-							userId: userId
-						})
-					})
-				}
-			</script>
 
 
 			<table class="attendance-info">
@@ -139,7 +121,7 @@
 						<th>備考</th>
 					</tr>
 				</thead>
-				<tbody id="dateTable" th:if="${formList != null}">
+				<tbody id="dateTable"  th:if="${formList != null}">
 					<tr th:each="form, iter : ${formList.attendanceForm}">
 
 						<td th:text="${form.formattedDate}"></td>
@@ -189,5 +171,25 @@
 
 
 </body>
+
+			<script>
+
+				function applicant(linkElement) {
+					// リンクが属する最も近い＜tr＞タグを取得
+					const trElement = linkElement.closest('tr');
+					// 確定した＜tr＞タグからそれぞれの値を取得
+					const targetYearMonth = trElement.getAttribute('data-target-year-month');
+					const userId = trElement.getAttribute('data-user-id');
+
+					// サーバーにリクエストを送信
+					fetch('/attendance/request', {
+						method: 'POST',
+						body: new URLSearchParams({
+							targetYearMonth: targetYearMonth,
+							userId: userId
+						})
+					})
+				}
+			</script>
 
 </html>
