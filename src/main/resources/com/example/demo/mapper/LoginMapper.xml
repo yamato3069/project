@@ -43,8 +43,7 @@
 		,#{name}
 		,#{role}
 		,#{startDate}		
-	)
-		
+	)	
 </insert>
 
 <delete id="deleteUser" parameterType="com.example.demo.entity.LoginUser">

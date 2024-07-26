@@ -2,7 +2,6 @@ package com.example.demo.form;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import lombok.Data;
 
@@ -13,8 +12,8 @@ public class AttendanceForm {
 	private Integer status;
 	private LocalDate date;
 	private DayOfWeek dayOfWeek;
-	private LocalTime startTime;
-	private LocalTime endTime;
+	private String startTime;
+	private String endTime;
 	private String remarks;
 	private String formattedDate;
 	private String formattedWeek;

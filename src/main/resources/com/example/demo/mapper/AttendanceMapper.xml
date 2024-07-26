@@ -43,7 +43,7 @@
 		DELETE
 		FROM attendance
 		WHERE
-		user_id = #{userId}
+		user_id = #{userId} AND date = #{date}
 	</delete>
 
 	<select id="findAttendanceReq"

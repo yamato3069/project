@@ -55,7 +55,7 @@
 							th:selected="${month == selectedMonth}"></option>
 					</select>
 					<label for="monthDropdown">月</label>
-					<div class="buttons">
+					<div class="buttons" th:if="${user.role != 'Manager'}">
 						<button type="submit" name="show">表示</button>
 					</div>
 
@@ -68,105 +68,107 @@
 				</th:block>
 
 				<div class="buttons">
-					
-					<button type="submit" name="dismissal">却下</button>
 
-					<button type="submit" name="permission">承認</button>
+					<button type="submit" name="dismissal" th:if="${user.role == 'Manager'}">却下</button>
 
-					<button type="submit" name="approval">承認申請</button>
+					<button type="submit" name="permission" th:if="${user.role == 'Manager'}">承認</button>
 
-					<button type="submit" name="register">登録</button>
+					<button type="submit" name="approval" th:if="${user.role != 'Manager'}">承認申請</button>
+
+					<button type="submit" name="register" th:if="${user.role != 'Manager'}">登録</button>
 
 				</div>
 
 
 			</div>
+			<div class="success" th:if="${approvalSuccess}" th:text="${approvalSuccess}"></div>
+			<div class="success" th:if="${permission}" th:text="${permission}"></div>
+			<div class="success" th:if="${dismissal}" th:text="${dismissal}"></div>
+			<table class="approval-info" th:if="${user.role == 'Manager'}">
 
-			<table class="approval-info">
+				<thead>
+					<tr>
+						<th>承認申請者</th>
+						<th>申請対象年月</th>
+						<th>申請日</th>
+					</tr>
+				</thead>
+				<tbody>
 
-	</form>
-	<thead>
-		<tr>
-			<th>承認申請者</th>
-			<th>申請対象年月</th>
-			<th>申請日</th>
-		</tr>
-	</thead>
-	<tbody>
+					<tr th:each="reqList : ${attendanceReqList}">
+						<td>
+							<nav><a
+									th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, userId=${reqList.userId})}">
+									[[${reqList.name}]]
+								</a>
+							</nav>
+						</td>
+						<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
+						<td th:text="${reqList.date}">申請日の表示</td>
+						<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
+						<input type="hidden" th:value="${reqList.userId}" name="userId">
+					</tr>
 
-		<tr th:each="reqList : ${attendanceReqList}">
-			<td>
-				<nav><a th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, userId=${reqList.userId})}">
-						[[${reqList.name}]]
-					</a>
-				</nav>
-			</td>
-			<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
-			<td th:text="${reqList.date}">申請日の表示</td>
-			<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
-			<input type="hidden" th:value="${reqList.userId}" name="userId">
-		</tr>
+				</tbody>
+			</table>
 
-	</tbody>
-	</table>
+			<table class="attendance-info">
 
-	<table class="attendance-info">
+				<thead>
+					<tr>
+						<th>日付</th>
+						<th>曜日</th>
+						<th>出勤状況</th>
+						<th>出勤時間</th>
+						<th>退勤時間</th>
+						<th>備考</th>
+					</tr>
+				</thead>
+				<tbody id="dateTable" th:if="${formList != null}">
+					<tr th:each="form, iter : ${formList.attendanceForm}">
 
-		<thead>
-			<tr>
-				<th>日付</th>
-				<th>曜日</th>
-				<th>出勤状況</th>
-				<th>出勤時間</th>
-				<th>退勤時間</th>
-				<th>備考</th>
-			</tr>
-		</thead>
-		<tbody id="dateTable" th:if="${formList != null}">
-			<tr th:each="form, iter : ${formList.attendanceForm}">
+						<td th:text="${form.formattedDate}"></td>
+						<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].formattedDate}"
+							th:value="${form.formattedDate}">
+						<td th:text="${form.formattedWeek}">dayOfWeek</td>
+						<td>
+							<select th:field="*{formList.attendanceForm[__${iter.index}__].status}">
+								<option value="99" th:selected="${form.status == null || form.status == ''}">未選択
+								</option>
+								<option value="0" th:selected="${form.status == 0}">通常出勤</option>
+								<option value="1" th:selected="${form.status == 1}">休日</option>
+								<option value="2" th:selected="${form.status == 2}">祝日</option>
+								<option value="3" th:selected="${form.status == 3}">遅刻</option>
+								<option value="4" th:selected="${form.status == 4}">有給</option>
+								<option value="5" th:selected="${form.status == 5}">欠勤</option>
+								<option value="6" th:selected="${form.status == 6}">早退</option>
+								<option value="7" th:selected="${form.status == 7}">時間外勤務</option>
+								<option value="8" th:selected="${form.status == 8}">振替出勤</option>
+								<option value="9" th:selected="${form.status == 9}">振替休日</option>
+								<option value="10" th:selected="${form.status == 10}">代替出勤</option>
+								<option value="11" th:selected="${form.status == 11}">代替休日</option>
+							</select>
+						</td>
 
-				<td th:text="${form.formattedDate}"></td>
-				<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].formattedDate}"
-					th:value="${form.formattedDate}">
-				<td th:text="${form.formattedWeek}">dayOfWeek</td>
-				<td>
-					<select th:field="*{formList.attendanceForm[__${iter.index}__].status}">
-						<option value="99" th:selected="${form.status == null || form.status == ''}">未選択
-						</option>
-						<option value="0" th:selected="${form.status == 0}">通常出勤</option>
-						<option value="1" th:selected="${form.status == 1}">休日</option>
-						<option value="2" th:selected="${form.status == 2}">祝日</option>
-						<option value="3" th:selected="${form.status == 3}">遅刻</option>
-						<option value="4" th:selected="${form.status == 4}">有給</option>
-						<option value="5" th:selected="${form.status == 5}">欠勤</option>
-						<option value="6" th:selected="${form.status == 6}">早退</option>
-						<option value="7" th:selected="${form.status == 7}">時間外勤務</option>
-						<option value="8" th:selected="${form.status == 8}">振替出勤</option>
-						<option value="9" th:selected="${form.status == 9}">振替休日</option>
-						<option value="10" th:selected="${form.status == 10}">代替出勤</option>
-						<option value="11" th:selected="${form.status == 11}">代替休日</option>
-					</select>
-				</td>
+						<td>
+							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
+								th:value="${form.startTime}" />
+						</td>
+						<td>
+							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
+								th:value="${form.endTime}" />
+						</td>
 
-				<td>
-					<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
-						th:value="${form.startTime}" />
-				</td>
-				<td>
-					<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
-						th:value="${form.endTime}" />
-				</td>
-
-				<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
-						th:value="${form.remarks}" /></td>
-				<th:block>
-					<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
-						th:value="${form.date}" />
-				</th:block>
-			</tr>
-		</tbody>
-	</table>
-	</div>
+						<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
+								th:value="${form.remarks}" /></td>
+						<th:block>
+							<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
+								th:value="${form.date}" />
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</form>
 
 

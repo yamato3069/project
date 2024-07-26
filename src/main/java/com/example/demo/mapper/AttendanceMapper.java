@@ -17,7 +17,7 @@ public interface AttendanceMapper {
 	
 	int insertAttendance(AttendanceEntity attendanceEntity);
 	
-	void deleteAttendance(@Param("userId") Integer userId);
+	void deleteAttendance(@Param("userId") Integer userId, @Param("date") LocalDate date);
 	
 	List<MonthlyAttendanceReqDto> findAttendanceReq();
 	
