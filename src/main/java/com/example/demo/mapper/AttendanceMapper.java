@@ -1,5 +1,6 @@
 package com.example.demo.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -19,4 +20,11 @@ public interface AttendanceMapper {
 	void deleteAttendance(@Param("userId") Integer userId);
 	
 	List<MonthlyAttendanceReqDto> findAttendanceReq();
+	
+	boolean approval(Integer userId, LocalDate targetYearMonth, LocalDate date);
+	
+	boolean permission(Integer userId, LocalDate targetYearMonth);
+	
+	boolean dismissal(Integer userId, LocalDate targetYearMonth);
+
 }

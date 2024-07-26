@@ -38,6 +38,7 @@ public class AttendanceController {
 	@RequestMapping("/regist")
 	public String hello(HttpSession session,
 			Model model) {
+		System.out.println("初期");
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		AttendanceFormList attendanceFormList = new AttendanceFormList();
 		model.addAttribute("attendanceFormList", attendanceFormList);
@@ -132,8 +133,6 @@ public class AttendanceController {
 			}
 			formList.setAttendanceForm(form);
 			model.addAttribute("formList", formList);
-			System.out.println(formList);
-			System.out.println("表示");
 			return "attendance/regist";
 		}
 
@@ -196,18 +195,40 @@ public class AttendanceController {
 
 		return "attendance/regist";
 	}
-	
+
+	// 『承認申請』ボタン押下
+	@PostMapping(path = "/show", params = "approval")
+	public String approval(Integer year, Integer month, Model model, HttpSession session) {
+		// マネージャーのみ。承認申請者の取得
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for (MonthlyAttendanceReqDto req : attendanceReqList) {
+			for (LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
+		// ログイン情報を再取得
+		LoginUser user = (LoginUser) session.getAttribute("user");
+		model.addAttribute("user", user);
+		int userId = user.getId();
+
+		String targetYearMonthStr = year + "-" + month + "-" + "1";
+		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr, DateTimeFormatter.ofPattern("yyyy-M-d"));
+
+		LocalDate today = LocalDate.now();
+		attendanceService.approval(userId, targetYearMonth, today);
+		return "attendance/regist";
+	};
+
 	// リンク押下
 	@RequestMapping(path = "/request")
-	public String request(@RequestParam("targetYearMonth") String targetYearMonthStr,
-			@RequestParam("userId") String userIdStr, @ModelAttribute AttendanceFormList attendanceFormList,
+	public String request(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
+			@RequestParam("userId") Integer userId, @ModelAttribute AttendanceFormList attendanceFormList,
 			Model model, HttpSession session) {
 
-		// String型からLocalDate型に変換
-		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr);
-		System.out.println(targetYearMonth);
-		// String型からInteger型に変換
-		Integer userId = Integer.parseInt(userIdStr);
 		// 年を抽出
 		Integer year = targetYearMonth.getYear();
 		// 月を抽出
@@ -216,6 +237,7 @@ public class AttendanceController {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 		// 
+
 		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 
 		List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
@@ -256,13 +278,6 @@ public class AttendanceController {
 		}
 		formList.setAttendanceForm(form);
 		model.addAttribute("formList", formList);
-		System.out.println(user);
-		System.out.println("?" + formList);
-		System.out.println("リンク押下");
-		System.out.println("申請対象日:" + targetYearMonth);
-		System.out.println("年:" + year);
-		System.out.println("月:" + month);
-		System.out.println("ユーザーID:" + userId);
 
 		// マネージャーのみ。承認申請者の取得
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
@@ -276,6 +291,31 @@ public class AttendanceController {
 			}
 		}
 
+		return "attendance/regist";
+
+	}
+
+	// 『承認』ボタン押下
+	@PostMapping(path = "/show", params = "permission")
+	public String permission(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
+			@RequestParam("userId") Integer userId, Model model, HttpSession session) {
+		// ログイン情報を再取得
+		LoginUser user = (LoginUser) session.getAttribute("user");
+		attendanceService.permission(userId, targetYearMonth);
+		model.addAttribute("user", user);
+		System.out.println("許可！");
+		return "attendance/regist";
+	};
+
+	// 『却下』ボタン押下
+	@PostMapping(path = "/show", params = "dismissal")
+	public String dismissal(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
+			@RequestParam("userId") Integer userId, Model model, HttpSession session) {
+		// ログイン情報を再取得
+		LoginUser user = (LoginUser) session.getAttribute("user");
+		attendanceService.dismissal(userId, targetYearMonth);
+		model.addAttribute("user", user);
+		System.out.println("却下！");
 		return "attendance/regist";
 	};
 
