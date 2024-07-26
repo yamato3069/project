@@ -13,7 +13,12 @@
 </select>
 
 <select id="getLoginUsers" resultType="com.example.demo.entity.LoginUser">
-	SELECT * 
+	SELECT 
+		id, 
+    	password, 
+    	name, 
+    	role, 
+    	start_date AS startDate 
 	FROM users
 	WHERE id = #{id}
 </select>

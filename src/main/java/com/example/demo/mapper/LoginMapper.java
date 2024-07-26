@@ -12,7 +12,7 @@ public interface LoginMapper {
 	
 	List<LoginUser> findAllUsers();
 	
-	LoginUser getLoginUsers(@Param("id") String string);
+	LoginUser getLoginUsers(@Param("id") String id);
 	
 	LoginUser serchUsers(@Param("name") String name);
 	
