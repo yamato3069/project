@@ -98,7 +98,7 @@
 					<tr th:each="reqList : ${attendanceReqList}">
 						<td>
 							<nav><a
-									th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, userId=${reqList.userId})}">
+									th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, userId=${reqList.selectedUserId})}">
 									[[${reqList.name}]]
 								</a>
 							</nav>
@@ -106,7 +106,7 @@
 						<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
 						<td th:text="${reqList.date}">申請日の表示</td>
 						<input type="hidden" th:value="${reqList.targetYearMonth}" name="targetYearMonth">
-						<input type="hidden" th:value="${reqList.userId}" name="userId">
+						<input type="hidden" th:value="${reqList.selectedUserId}" name="selectedUserId">
 					</tr>
 
 				</tbody>

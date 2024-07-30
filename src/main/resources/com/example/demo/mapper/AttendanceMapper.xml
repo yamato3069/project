@@ -50,7 +50,7 @@
 		resultType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		SELECT
 		id AS Id,
-		user_id AS userId,
+		user_id AS selectedUserId,
 		target_year_month AS targetYearMonth,
 		date,
 		is_approved AS status
@@ -78,18 +78,17 @@
 		UPDATE monthly_attendance_req
 		SET
 		is_approved = 2
-		WHERE user_id = #{userId}
+		WHERE user_id = #{selectedUserId}
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>
-	<!--	dismissal-->
 
 	<update id="dismissal"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		UPDATE monthly_attendance_req
 		SET
 		is_approved = 3
-		WHERE user_id = #{userId}
+		WHERE user_id = #{selectedUserId}
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>

@@ -23,8 +23,8 @@ public interface AttendanceMapper {
 	
 	boolean approval(Integer userId, LocalDate targetYearMonth, LocalDate date);
 	
-	boolean permission(Integer userId, LocalDate targetYearMonth);
+	boolean permission(Integer selectedUserId, LocalDate targetYearMonth);
 	
-	boolean dismissal(Integer userId, LocalDate targetYearMonth);
+	boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth);
 
 }

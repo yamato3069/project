@@ -8,7 +8,7 @@ import lombok.Data;
 public class MonthlyAttendanceReqDto {
 	
 	private Integer Id;
-	private Integer userId;
+	private Integer selectedUserId;
 	private LocalDate targetYearMonth;
 	private LocalDate date;
 	private Short status;

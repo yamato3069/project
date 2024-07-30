@@ -72,22 +72,20 @@ public class AttendanceService {
 
 		boolean attendance = attendanceMapper.approval(userId, targetYearMonth, date);
 
-		System.out.println("申請");
-
 		return attendance;
 
 	}
 
-	public boolean permission(Integer userId, LocalDate targetYearMonth) {
+	public boolean permission(Integer selectedUserId, LocalDate targetYearMonth) {
 
-		boolean permission = attendanceMapper.permission(userId, targetYearMonth);
+		boolean permission = attendanceMapper.permission(selectedUserId, targetYearMonth);
 
 		return permission;
 	};
 
-	public boolean dismissal(Integer userId, LocalDate targetYearMonth) {
+	public boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth) {
 
-		boolean dismissal = attendanceMapper.permission(userId, targetYearMonth);
+		boolean dismissal = attendanceMapper.dismissal(selectedUserId, targetYearMonth);
 
 		return dismissal;
 	};
