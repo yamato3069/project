@@ -260,7 +260,7 @@ public class AttendanceController {
 				}
 			}
 		}
-
+		System.out.print(attendanceReqList);
 		return getAttendance(year, month, attendanceFormList, model, session);
 
 	}
@@ -269,6 +269,16 @@ public class AttendanceController {
 	@PostMapping(path = "/show", params = "permission")
 	public String permission(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
 			@RequestParam("userId") Integer userId, Model model, HttpSession session) {
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for (MonthlyAttendanceReqDto req : attendanceReqList) {
+			for (LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		attendanceService.permission(userId, targetYearMonth);
@@ -281,6 +291,16 @@ public class AttendanceController {
 	@PostMapping(path = "/show", params = "dismissal")
 	public String dismissal(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
 			@RequestParam("userId") Integer userId, Model model, HttpSession session) {
+		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
+		model.addAttribute("attendanceReqList", attendanceReqList);
+		List<LoginUser> usersList = loginService.findAllUsers();
+		for (MonthlyAttendanceReqDto req : attendanceReqList) {
+			for (LoginUser users : usersList) {
+				if (req.getUserId().equals(users.getId())) {
+					req.setName(users.getName());
+				}
+			}
+		}
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		attendanceService.dismissal(userId, targetYearMonth);
