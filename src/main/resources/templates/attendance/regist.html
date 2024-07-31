@@ -84,7 +84,8 @@
 
 					<button type="submit" name="permission" th:if="${user.role == 'Manager'}">承認</button>
 
-					<button type="submit" name="approval" th:if="${user.role != 'Manager'}">承認申請</button>
+					<button type="submit" name="approval" th:if="${user.role != 'Manager'}"
+						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
 					<button type="submit" name="register" th:if="${user.role != 'Manager'}">登録</button>
 
@@ -173,7 +174,7 @@
 								th:value="${form.startTime}"
 								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</td>
-						
+
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
 								th:value="${form.endTime}"
@@ -184,13 +185,13 @@
 								th:value="${form.remarks}"
 								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</td>
-						
+
 						<th:block>
 							<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
 								th:value="${form.date}"
 								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</th:block>
-						
+
 					</tr>
 				</tbody>
 			</table>
