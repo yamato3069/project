@@ -14,6 +14,8 @@ public class MonthlyAttendanceReqDto {
 	private Short status;
 	private String name;
 	
+	
+	
 // コンストラクタ
 	public MonthlyAttendanceReqDto(){
 		System.out.println("コンストラクタ起動");

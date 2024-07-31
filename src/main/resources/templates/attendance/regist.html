@@ -30,7 +30,7 @@
 <body>
 
 	<form id="AttendanceForm" th:action="@{/attendance/show}" method="POST">
-		
+
 		<input type="hidden" th:value="${targetYearMonth}" name="targetYearMonth">
 		<input type="hidden" th:value="${selectedUserId}" name="selectedUserId">
 		<input type="hidden" th:value="${user.id}" name="userId">
@@ -40,11 +40,11 @@
 				<p>ユーザ名：</p><span th:text="${user.name}"></span>
 				<p>ユーザID：</p><span name="userId" th:text="${user.id}"></span>
 				<p th:if="${user.role != 'Manager'}">ステータス
-				<p th:if="${myRequest != null}"> 
-				<span th:if="${myRequest.status == 0}">未申請</span>
-				<span th:if="${myRequest.status == 1}">承認待ち</span>
-				<span th:if="${myRequest.status == 2}">承認済み</span>
-				<span th:if="${myRequest.status == 3}">却下</span>
+				<p th:if="${myRequest != null}">
+					<span th:if="${myRequest.status == 0}">未申請</span>
+					<span th:if="${myRequest.status == 1}">承認待ち</span>
+					<span th:if="${myRequest.status == 2}">承認済み</span>
+					<span th:if="${myRequest.status == 3}">却下</span>
 				</p>
 				</p>
 				<input type="hidden" name="userId" th:value="${user.id}">
@@ -105,7 +105,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					
+
 					<tr th:each="reqList : ${attendanceReqList}">
 						<td>
 							<nav>
@@ -118,7 +118,7 @@
 						<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
 						<td th:text="${reqList.date}">申請日の表示</td>
 						<th:block>
-							
+
 						</th:block>
 					</tr>
 
@@ -144,11 +144,13 @@
 					<tr th:each="form, iter : ${formList.attendanceForm}">
 
 						<td th:text="${form.formattedDate}"></td>
-						<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].formattedDate}" ///
+						<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].formattedDate}"
 							th:value="${form.formattedDate}">
 						<td th:text="${form.formattedWeek}">dayOfWeek</td>
 						<td>
-							<select th:field="*{formList.attendanceForm[__${iter.index}__].status}">///
+							<select th:field="*{formList.attendanceForm[__${iter.index}__].status}"
+								th:disabled="${myRequest.status == 1 || myRequest.status == 2}">
+
 								<option value="99" th:selected="${form.status == null || form.status == ''}">未選択
 								</option>
 								<option value="0" th:selected="${form.status == 0}">通常出勤</option>
@@ -167,19 +169,23 @@
 						</td>
 
 						<td>
-							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}" ///
-								th:value="${form.startTime}" />
+							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
+								th:value="${form.startTime}"
+								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</td>
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
-								th:value="${form.endTime}" />
+								th:value="${form.endTime}"
+								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</td>
 
 						<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
-								th:value="${form.remarks}" /></td>
+								th:value="${form.remarks}"
+								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" /></td>
 						<th:block>
 							<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
-								th:value="${form.date}" />
+								th:value="${form.date}"
+								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
 						</th:block>
 					</tr>
 				</tbody>
