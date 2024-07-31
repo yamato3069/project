@@ -77,6 +77,7 @@ public class AttendanceService {
 		attendanceMapper.deleteAttendance(userId, date);
 	}
 
+	// 『承認申請』ボタン押下
 	public boolean approval(Integer userId, LocalDate targetYearMonth, LocalDate date) {
 
 		boolean attendance = attendanceMapper.approval(userId, targetYearMonth, date);
@@ -84,6 +85,14 @@ public class AttendanceService {
 		return attendance;
 
 	}
+	
+	// 却下後再度『承認申請』ボタン押下
+	public boolean approvalAgain(Integer id, LocalDate targetYearMonth) {
+		
+		boolean again = attendanceMapper.approvalAgain(id, targetYearMonth);
+		
+		return again;
+	};
 
 	public boolean permission(Integer selectedUserId, LocalDate targetYearMonth) {
 

@@ -78,7 +78,18 @@
 		)
 
 	</insert>
-
+	
+<!--却下後再度承認申請ボタン押下-->	
+		<update id="approvalAgain"
+		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
+		UPDATE monthly_attendance_req
+		SET
+		is_approved = 1
+		WHERE user_id = #{id}
+		AND
+		target_year_month = #{targetYearMonth}
+	</update>
+	
 <!--承認ボタン押下-->
 	<update id="permission"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">

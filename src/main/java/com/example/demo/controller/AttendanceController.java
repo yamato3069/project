@@ -214,9 +214,20 @@ public class AttendanceController {
 
 		String targetYearMonthStr = year + "-" + month + "-" + "1";
 		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr, DateTimeFormatter.ofPattern("yyyy-M-d"));
+		
+		// 申請の時にステータスを再所得
+		MonthlyAttendanceReqDto myRequest = attendanceService.findReqById(targetYearMonth, user.getId());
 
-		LocalDate today = LocalDate.now();
-		attendanceService.approval(userId, targetYearMonth, today);
+//		model.addAttribute("myRequest", myRequest);
+		
+		if(myRequest.getStatus() == 3) {
+			
+			attendanceService.approvalAgain(user.getId(), targetYearMonth);
+		
+		} else {
+			LocalDate today = LocalDate.now();
+			attendanceService.approval(userId, targetYearMonth, today);
+		}
 		model.addAttribute("approvalSuccess", "申請が完了しました。");
 		return "attendance/regist";
 	};
