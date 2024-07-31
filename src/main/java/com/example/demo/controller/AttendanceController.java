@@ -135,7 +135,7 @@ public class AttendanceController {
 
 				MonthlyAttendanceReqDto myRequest = attendanceService.findReqById(targetYearMonth, user.getId());
 				// 参照できるデータがなかった場合、コンストラクタで 0 をセットする
-				if (myRequest == null) {					
+				if (myRequest == null) {
 					myRequest = new MonthlyAttendanceReqDto();
 				}
 
@@ -269,6 +269,11 @@ public class AttendanceController {
 				}
 			}
 		}
+		
+		// リンク押下でエラーが出るのでモデル追加
+		MonthlyAttendanceReqDto myRequest = new MonthlyAttendanceReqDto();
+
+		model.addAttribute("myRequest", myRequest);
 
 		return getAttendance(year, month, attendanceFormList, model, session);
 
