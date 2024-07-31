@@ -144,6 +144,23 @@ public class AttendanceController {
 			formList.setAttendanceForm(form);
 			model.addAttribute("formList", formList);
 
+			formList.setAttendanceForm(form);
+			model.addAttribute("formList", formList);
+
+			AttendanceFormList checkFormList = (AttendanceFormList) model.getAttribute("formList");
+			List<AttendanceForm> checkForms = checkFormList.getAttendanceForm();
+
+			boolean flg = true;
+
+			for (AttendanceForm attendanceForm : checkForms) {
+				if (attendanceForm.getStatus() == null || attendanceForm.getStartTime().isEmpty()
+						|| attendanceForm.getEndTime().isEmpty() || attendanceForm.getRemarks().isEmpty()) {
+					flg = false;
+					break;
+				}
+			}
+			model.addAttribute("attendanceFlg", flg);
+
 			return "attendance/regist";
 		}
 
@@ -280,14 +297,38 @@ public class AttendanceController {
 				}
 			}
 		}
-		
+
 		// リンク押下でエラーが出るのでモデル追加
 		MonthlyAttendanceReqDto myRequest = new MonthlyAttendanceReqDto();
 
 		model.addAttribute("myRequest", myRequest);
 
-		return getAttendance(year, month, attendanceFormList, model, session);
-
+		AttendanceFormList formList = new AttendanceFormList();
+		List<AttendanceForm> form = new ArrayList<AttendanceForm>();
+		formList.setAttendanceForm(form);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		for (AttendanceDayDto day2 : calendar) {
+			AttendanceForm attendanceForm = new AttendanceForm();
+			attendanceForm.setId(day2.getId());
+			attendanceForm.setUserId(user.getId());
+			attendanceForm.setStatus(day2.getStatus());
+			attendanceForm.setDate(day2.getDate());
+			attendanceForm.setDayOfWeek(day2.getDayOfWeek());
+			String formattedStartTime = day2.getStartTime() != null ? day2.getStartTime().format(timeFormatter)
+					: "";
+			String formattedEndTime = day2.getEndTime() != null ? day2.getEndTime().format(timeFormatter) : "";
+			attendanceForm.setStartTime(formattedStartTime);
+			attendanceForm.setEndTime(formattedEndTime);
+			attendanceForm.setRemarks(day2.getRemarks());
+			String formattedDate = day2.getDate().format(formatter);
+			attendanceForm.setFormattedDate(formattedDate);
+			attendanceForm.setFormattedWeek(day2.getFormattedWeek());
+			form.add(attendanceForm);
+		}
+		formList.setAttendanceForm(form);
+		model.addAttribute("formList", formList);
+		return "attendance/regist";
 	}
 
 	// 『承認』ボタン押下
