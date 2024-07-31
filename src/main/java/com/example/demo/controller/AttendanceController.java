@@ -75,7 +75,6 @@ public class AttendanceController {
 		model.addAttribute("selectedMonth", month);
 
 		if (year == null || month == null) {
-			System.out.println("未入力");
 			//エラーメッセージの表示
 			String errorMessage = "未入力の項目があります";
 			model.addAttribute("errorMessage", errorMessage);
@@ -139,12 +138,6 @@ public class AttendanceController {
 				if (myRequest == null) {					
 					myRequest = new MonthlyAttendanceReqDto();
 				}
-//				System.out.println(myRequest.getStatus());
-				System.out.println(myRequest);
-				System.out.println("表示");
-				System.out.println(targetYearMonth);
-				System.out.println(user.getId());
-				System.out.println(myRequest);
 
 				model.addAttribute("myRequest", myRequest);
 			}
@@ -276,7 +269,7 @@ public class AttendanceController {
 				}
 			}
 		}
-		System.out.print(attendanceReqList);
+
 		return getAttendance(year, month, attendanceFormList, model, session);
 
 	}
@@ -286,9 +279,7 @@ public class AttendanceController {
 	public String permission(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
 			@RequestParam("userId") Integer userId, @RequestParam("selectedUserId") Integer selectedUserId, Model model,
 			HttpSession session) {
-		System.out.println("targetYearMonth:" + targetYearMonth);
-		System.out.println("selectedUserId:" + selectedUserId);
-		System.out.println("userId:" + userId);
+
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
 		model.addAttribute("attendanceReqList", attendanceReqList);
 		List<LoginUser> usersList = loginService.findAllUsers();
