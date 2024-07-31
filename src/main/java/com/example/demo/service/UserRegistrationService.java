@@ -39,6 +39,10 @@ public class UserRegistrationService {
 		}
 	}
 	
+	public void update(LoginUser loginUser) {
+        loginMapper.update(loginUser);
+    }
+	
 	public void validateUserRegist(UserSerchForm userSerchForm, BindingResult result) {
 		if(userSerchForm.getName().isEmpty()) {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));

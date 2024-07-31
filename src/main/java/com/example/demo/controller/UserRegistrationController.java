@@ -35,50 +35,51 @@ public class UserRegistrationController {
 		return "user/registration";
 	}
 
-	@PostMapping(path = "/registration", params = "search")//検索用メソッド
+	@PostMapping(path = "/registration", params = "search") //検索用メソッド
 	public String searchUser(@ModelAttribute UserSerchForm userSerchForm, BindingResult result, Model model) {
 		List<LoginUser> allUsers = loginService.findAllUsers();
 		userRegistrationService.validateUserSerch(userSerchForm, result);
-		
+
 		if (result.hasErrors()) {
-	        return "user/registration";
-	    }
-		
+			return "user/registration";
+		}
+
 		for (LoginUser user : allUsers) {
 			if (user.getName().equals(userSerchForm.getName())) {
 				model.addAttribute("user", user);
 				break;
-			}else {
+			} else {
 				String userId = userRegistrationService.generateUserID(5);
 				model.addAttribute("userId", userId);
 			}
-			
+
 		}
 		return "user/registration";
 	}
 
-	@PostMapping(path = "/registration", params = "register")//登録＆削除メソッド
-	public String registAndDeleteUser(@ModelAttribute UserSerchForm userSerchForm, BindingResult result, Model model) throws ParseException {
+	@PostMapping(path = "/registration", params = "register") //登録＆削除メソッド
+	public String registAndDeleteUser(@ModelAttribute UserSerchForm userSerchForm, BindingResult result, Model model)
+			throws ParseException {
 		userRegistrationService.validateUserRegist(userSerchForm, result);
 		if (result.hasErrors()) {
-	        return "user/registration";
-	    }
-		
+			return "user/registration";
+		}
+
 		if ("9999/99/99".equals(userSerchForm.getStartDate().toString())) {
 			loginService.deleteUser(userSerchForm.getId());
 			model.addAttribute("delete", "ユーザーの削除が完了しました。");
 		} else {
-			List<LoginUser> allUsers = loginService.findAllUsers();
-			boolean alreadyRegist = false;
-			for (LoginUser user : allUsers) {
-				if (user.getName().equals(userSerchForm.getName())) {
-					alreadyRegist = true;
-					break;
-				}
-			}
-			if (alreadyRegist) {
-				model.addAttribute("error", "既に登録済みのユーザーです。");
-				
+			LoginUser existingUser = userRegistrationService.serchUsers(userSerchForm.getName());
+			if (existingUser != null) {
+				existingUser.setPassword(userSerchForm.getPassword());
+				existingUser.setRole(userSerchForm.getRole());
+
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date startDate = dateFormat.parse(userSerchForm.getStartDate());
+				existingUser.setStartDate(startDate);
+
+				userRegistrationService.update(existingUser);
+				model.addAttribute("success", "ユーザー情報の更新が完了しました。");
 			} else {
 				LoginUser newUser = new LoginUser();
 				newUser.setId(userSerchForm.getId());

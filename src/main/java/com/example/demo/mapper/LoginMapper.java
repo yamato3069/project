@@ -21,4 +21,6 @@ public interface LoginMapper {
 			@Param("startDate") Date startDate);
 
 	void deleteUser(@Param("id") Integer id);
+	
+	void update(LoginUser loginUser);
 }
