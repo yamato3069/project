@@ -13,6 +13,11 @@ public class MonthlyAttendanceReqDto {
 	private LocalDate date;
 	private Short status;
 	private String name;
-
+	
+// コンストラクタ
+	public MonthlyAttendanceReqDto(){
+		System.out.println("コンストラクタ起動");
+		setStatus((short) 0);
+	};
 
 }

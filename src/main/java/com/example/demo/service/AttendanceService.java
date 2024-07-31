@@ -48,12 +48,21 @@ public class AttendanceService {
 		return attendanceDtoList;
 
 	}
-
+	
+	// MG側　月次勤怠申請リスト取得
 	public List<MonthlyAttendanceReqDto> findAttendanceReq() {
 
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceMapper.findAttendanceReq();
 
 		return attendanceReqList;
+	}
+	
+	// 社員、UM側　月次勤怠取得
+	public MonthlyAttendanceReqDto findReqById(LocalDate targetYearMonth,Integer id) {
+
+		MonthlyAttendanceReqDto myRequest = attendanceMapper.findReqById(targetYearMonth,id);
+
+		return myRequest;
 	}
 
 	public boolean insertAttendance(AttendanceEntity attendanceEntity) {

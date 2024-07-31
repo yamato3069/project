@@ -20,11 +20,13 @@ public interface AttendanceMapper {
 	void deleteAttendance(@Param("userId") Integer userId, @Param("date") LocalDate date);
 	
 	List<MonthlyAttendanceReqDto> findAttendanceReq();
-	
+	// 『承認申請』ボタン押下
 	boolean approval(Integer userId, LocalDate targetYearMonth, LocalDate date);
-	
+	// 『承認』ボタン押下
 	boolean permission(Integer selectedUserId, LocalDate targetYearMonth);
-	
+	// 『却下』ボタン押下
 	boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth);
+	//　UM,社員、月次勤怠申請取得
+	MonthlyAttendanceReqDto findReqById( LocalDate targetYearMonth,@Param("id") Integer id);
 
 }

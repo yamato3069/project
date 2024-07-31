@@ -92,5 +92,20 @@
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>
+	
+		<select id="findReqById"
+		resultType="com.example.demo.dto.MonthlyAttendanceReqDto">
+		SELECT
+		t1.id,
+		t1.user_id AS userId,
+		t1.target_year_month AS targetYearMonth,
+		t1.date,
+		t1.is_approved AS status
+		FROM monthly_attendance_req t1
+		WHERE
+		user_id = #{id}
+		AND
+		target_year_month = #{targetYearMonth}
+	</select>
 
 </mapper>

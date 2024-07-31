@@ -38,13 +38,14 @@ public class AttendanceController {
 
 	// 初期表示
 	@RequestMapping("/regist")
-	public String hello(@RequestParam(value = "Name", defaultValue = "World") String name, HttpSession session,
+	public String hello(HttpSession session,
 			Model model) {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		AttendanceFormList attendanceFormList = new AttendanceFormList();
 		model.addAttribute("attendanceFormList", attendanceFormList);
 		model.addAttribute("user", user);
 
+		// MG側　月次勤怠申請リスト取得
 		if (user != null && "Manager".equals(user.getRole())) {
 			List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
 			model.addAttribute("attendanceReqList", attendanceReqList);
@@ -66,18 +67,6 @@ public class AttendanceController {
 	public String getAttendance(Integer year, Integer month,
 			@ModelAttribute AttendanceFormList attendanceFormList, Model model,
 			HttpSession session) {
-
-		// マネージャーのみ。承認申請者の取得
-		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
-		model.addAttribute("attendanceReqList", attendanceReqList);
-		List<LoginUser> usersList = loginService.findAllUsers();
-		for (MonthlyAttendanceReqDto req : attendanceReqList) {
-			for (LoginUser users : usersList) {
-				if (req.getSelectedUserId().equals(users.getId())) {
-					req.setName(users.getName());
-				}
-			}
-		}
 
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
@@ -136,9 +125,32 @@ public class AttendanceController {
 				attendanceForm.setFormattedDate(formattedDate);
 				attendanceForm.setFormattedWeek(day2.getFormattedWeek());
 				form.add(attendanceForm);
+
+			}
+			// 社員、UM側　月次勤怠取得
+			if (user != null && !("Manager".equals(user.getRole()))) {
+				// 年と月を組み合わせてLocalDate型を作る
+				String targetYearMonthStr = year + "-" + month + "-" + "1";
+				LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr,
+						DateTimeFormatter.ofPattern("yyyy-M-d"));
+
+				MonthlyAttendanceReqDto myRequest = attendanceService.findReqById(targetYearMonth, user.getId());
+				// 参照できるデータがなかった場合、コンストラクタで 0 をセットする
+				if (myRequest == null) {					
+					myRequest = new MonthlyAttendanceReqDto();
+				}
+//				System.out.println(myRequest.getStatus());
+				System.out.println(myRequest);
+				System.out.println("表示");
+				System.out.println(targetYearMonth);
+				System.out.println(user.getId());
+				System.out.println(myRequest);
+
+				model.addAttribute("myRequest", myRequest);
 			}
 			formList.setAttendanceForm(form);
 			model.addAttribute("formList", formList);
+
 			return "attendance/regist";
 		}
 
@@ -219,7 +231,8 @@ public class AttendanceController {
 	// リンク押下
 	@RequestMapping(path = "/request")
 	public String request(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
-			@RequestParam("userId") Integer userId, @ModelAttribute AttendanceFormList attendanceFormList,
+			@RequestParam("selectedUserId") Integer selectedUserId,
+			@ModelAttribute AttendanceFormList attendanceFormList,
 			Model model, HttpSession session) {
 
 		// 年を抽出
@@ -233,7 +246,7 @@ public class AttendanceController {
 
 		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 
-		List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, userId);
+		List<AttendanceDto> attendanceList = attendanceService.findByYearAndMonth(year, month, selectedUserId);
 
 		// attendanceListの要素をcalendarの要素と比較して値を設定する
 		for (AttendanceDayDto day : calendar) {
@@ -252,6 +265,9 @@ public class AttendanceController {
 		// マネージャーのみ。承認申請者の取得
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
 		model.addAttribute("attendanceReqList", attendanceReqList);
+		model.addAttribute("targetYearMonth", targetYearMonth);
+		model.addAttribute("selectedUserId", selectedUserId);
+
 		List<LoginUser> usersList = loginService.findAllUsers();
 		for (MonthlyAttendanceReqDto req : attendanceReqList) {
 			for (LoginUser users : usersList) {
@@ -270,6 +286,9 @@ public class AttendanceController {
 	public String permission(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
 			@RequestParam("userId") Integer userId, @RequestParam("selectedUserId") Integer selectedUserId, Model model,
 			HttpSession session) {
+		System.out.println("targetYearMonth:" + targetYearMonth);
+		System.out.println("selectedUserId:" + selectedUserId);
+		System.out.println("userId:" + userId);
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
 		model.addAttribute("attendanceReqList", attendanceReqList);
 		List<LoginUser> usersList = loginService.findAllUsers();
