@@ -235,7 +235,10 @@ public class AttendanceController {
 		// 申請の時にステータスを再所得
 		MonthlyAttendanceReqDto myRequest = attendanceService.findReqById(targetYearMonth, user.getId());
 
-//		model.addAttribute("myRequest", myRequest);
+		// 参照できるデータがなかった場合、コンストラクタで 0 をセットする
+		if (myRequest == null) {
+			myRequest = new MonthlyAttendanceReqDto();
+		}
 		
 		if(myRequest.getStatus() == 3) {
 			
