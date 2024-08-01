@@ -18,7 +18,7 @@ public class MonthlyAttendanceReqDto {
 	
 // コンストラクタ
 	public MonthlyAttendanceReqDto(){
-		System.out.println("コンストラクタ起動");
+
 		setStatus((short) 0);
 	};
 

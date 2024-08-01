@@ -40,7 +40,7 @@
 				<p>ユーザ名：</p><span th:text="${user.name}"></span>
 				<p>ユーザID：</p><span name="userId" th:text="${user.id}"></span>
 				<p th:if="${user.role != 'Manager'}">ステータス
-				<p th:if="${myRequest != null}">
+				<p th:if="${myRequest != null && user.role != 'Manager'}">
 					<span th:if="${myRequest.status == 0}">未申請</span>
 					<span th:if="${myRequest.status == 1}">承認待ち</span>
 					<span th:if="${myRequest.status == 2}">承認済み</span>
@@ -56,14 +56,14 @@
 					<label for="yearDropdown">表示年月：</label>
 					<select id="yearDropdown" name="year">
 						<option value="" th:disabled="${user.role == 'Manager'}">未選択</option>
-						<option th:each="year : ${#numbers.sequence(2020, 2025)}" th:value="${year}" th:text="${year}"
-							th:selected="${year == selectedYear}" th:disabled="${user.role == 'Manager'}"></option>
+						<option th:each="year : ${#numbers.sequence(2020, 2025)}" th:value="${year}" th:text="${year}"						
+							th:selected="${year == selectedYear || year == linkedYear}"  th:disabled="${user.role == 'Manager'}"></option>
 					</select>
 					<label for="yearDropdown">年</label>
 					<select id="monthDropdown" name="month">
 						<option value="" th:disabled="${user.role == 'Manager'}">未選択</option>
-						<option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"
-							th:selected="${month == selectedMonth}" th:disabled="${user.role == 'Manager'}"></option>
+						<option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"						
+							th:selected="${month == selectedMonth || month == linkedMonth}"  th:disabled="${user.role == 'Manager'}"></option>
 					</select>
 					<label for="monthDropdown">月</label>
 					<div class="buttons" th:if="${user.role != 'Manager'}">
@@ -124,9 +124,7 @@
 						</td>
 						<td th:text="${reqList.targetYearMonth}">申請対象年月の表示</td>
 						<td th:text="${reqList.date}">申請日の表示</td>
-						<th:block>
 
-						</th:block>
 					</tr>
 
 				</tbody>
@@ -137,7 +135,7 @@
 
 			<table class="attendance-info">
 
-				<thead th:if="${user.role != 'Manager'}">
+				<thead>
 					<tr>
 						<th>日付</th>
 						<th>曜日</th>

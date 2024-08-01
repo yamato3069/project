@@ -144,8 +144,9 @@ public class AttendanceController {
 			formList.setAttendanceForm(form);
 			model.addAttribute("formList", formList);
 
-			formList.setAttendanceForm(form);
-			model.addAttribute("formList", formList);
+			// 繰り返し
+			//			formList.setAttendanceForm(form);
+			//			model.addAttribute("formList", formList);
 
 			AttendanceFormList checkFormList = (AttendanceFormList) model.getAttribute("formList");
 			List<AttendanceForm> checkForms = checkFormList.getAttendanceForm();
@@ -175,34 +176,34 @@ public class AttendanceController {
 		model.addAttribute("user", user);
 		int userId = user.getId();
 
-		 boolean hasErrors = false;
+		boolean hasErrors = false;
 
-		    for (AttendanceForm form : attendanceFormList.getAttendanceForm()) {
-		        if (form.getStartTime() != null && !form.getStartTime().isEmpty()
-		                && !form.getStartTime().matches("\\d{2}:\\d{2}")) {
-		            model.addAttribute("errorStartTime",
-		                    "出勤時間は'hh:mm'の形式で入力してください。");
-		            hasErrors = true;
-		        }
+		for (AttendanceForm form : attendanceFormList.getAttendanceForm()) {
+			if (form.getStartTime() != null && !form.getStartTime().isEmpty()
+					&& !form.getStartTime().matches("\\d{2}:\\d{2}")) {
+				model.addAttribute("errorStartTime",
+						"出勤時間は'hh:mm'の形式で入力してください。");
+				hasErrors = true;
+			}
 
-		        if (form.getEndTime() != null && !form.getEndTime().isEmpty()
-		                && !form.getEndTime().matches("\\d{2}:\\d{2}")) {
-		            model.addAttribute("errorEndTime",
-		                    "退勤時間は'hh:mm'の形式で入力してください。");
-		            hasErrors = true;
-		        }
-		        
-		        if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
-		        	 model.addAttribute("errorRemarks","備考は全角文字で入力してください。");
-		        } else if (form.getRemarks().length() > 20) 
-		        	model.addAttribute("errorRemarks2","備考は20文字以内で入力してください。");
-		        	hasErrors = true;
-		    }
+			if (form.getEndTime() != null && !form.getEndTime().isEmpty()
+					&& !form.getEndTime().matches("\\d{2}:\\d{2}")) {
+				model.addAttribute("errorEndTime",
+						"退勤時間は'hh:mm'の形式で入力してください。");
+				hasErrors = true;
+			}
 
-		    if (hasErrors) {
-		        return getAttendance(year, month, attendanceFormList, model, session);
-		    }
-	
+			if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
+				model.addAttribute("errorRemarks", "備考は全角文字で入力してください。");
+			} else if (form.getRemarks().length() > 20) {
+				model.addAttribute("errorRemarks2", "備考は20文字以内で入力してください。");
+				hasErrors = true;
+			}
+		}
+
+		if (hasErrors) {
+			return getAttendance(year, month, attendanceFormList, model, session);
+		}
 
 		for (AttendanceForm attendanceForm1 : attendanceFormList.getAttendanceForm()) {
 
@@ -230,6 +231,7 @@ public class AttendanceController {
 			attendanceService.insertAttendance(newAttendance);
 		}
 		model.addAttribute("success", "勤怠登録が完了しました。");
+
 		return getAttendance(year, month, attendanceFormList, model, session);
 	}
 
@@ -254,7 +256,7 @@ public class AttendanceController {
 
 		String targetYearMonthStr = year + "-" + month + "-" + "1";
 		LocalDate targetYearMonth = LocalDate.parse(targetYearMonthStr, DateTimeFormatter.ofPattern("yyyy-M-d"));
-		
+
 		// 申請の時にステータスを再所得
 		MonthlyAttendanceReqDto myRequest = attendanceService.findReqById(targetYearMonth, user.getId());
 
@@ -262,11 +264,11 @@ public class AttendanceController {
 		if (myRequest == null) {
 			myRequest = new MonthlyAttendanceReqDto();
 		}
-		
-		if(myRequest.getStatus() == 3) {
-			
+
+		if (myRequest.getStatus() == 3) {
+
 			attendanceService.approvalAgain(user.getId(), targetYearMonth);
-		
+
 		} else {
 			LocalDate today = LocalDate.now();
 			attendanceService.approval(userId, targetYearMonth, today);
@@ -277,6 +279,7 @@ public class AttendanceController {
 
 	// リンク押下
 	@RequestMapping(path = "/request")
+	//	@PostMapping(path = "/request")
 	public String request(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
 			@RequestParam("selectedUserId") Integer selectedUserId,
 			@ModelAttribute AttendanceFormList attendanceFormList,
@@ -284,8 +287,10 @@ public class AttendanceController {
 
 		// 年を抽出
 		Integer year = targetYearMonth.getYear();
+		model.addAttribute("linkedYear", year);
 		// 月を抽出
 		Integer month = targetYearMonth.getMonthValue();
+		model.addAttribute("linkedMonth", month);
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
