@@ -2,54 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.LoginMapper">
-<select id="findAllUsers" resultType="com.example.demo.entity.LoginUser">
-    SELECT 
-    	id, 
-    	password, 
-    	name, 
-    	role, 
-    	start_date AS startDate
-    FROM users
-</select>
+	<select id="findAllUsers"
+		resultType="com.example.demo.entity.LoginUser">
+		SELECT
+		id,
+		password,
+		name,
+		role,
+		start_date AS startDate
+		FROM users
+	</select>
 
-<select id="getLoginUsers" resultType="com.example.demo.entity.LoginUser">
-	SELECT 
-		id, 
-    	password, 
-    	name, 
-    	role, 
-    	start_date AS startDate 
-	FROM users
-	WHERE id = #{id}
-</select>
+	<select id="getLoginUsers"
+		resultType="com.example.demo.entity.LoginUser">
+		SELECT
+		id,
+		password,
+		name,
+		role,
+		start_date AS startDate
+		FROM users
+		WHERE id = #{id}
+	</select>
 
-<select id="serchUsers" resultType="com.example.demo.entity.LoginUser">
-	SELECT *
-	FROM users
-	WHERE name = #{name}
-</select>
+	<select id="serchUsers"
+		resultType="com.example.demo.entity.LoginUser">
+		SELECT *
+		FROM users
+		WHERE name = #{name}
+	</select>
 
-<insert id="insertUser" parameterType="com.example.demo.entity.LoginUser">
-	INSERT INTO users
-	(
+	<insert id="insertUser"
+		parameterType="com.example.demo.entity.LoginUser">
+		INSERT INTO users
+		(
 		id
 		,password
 		,name
 		,role
 		,start_date
-	) VALUES (
+		) VALUES (
 		#{id}
 		,#{password}
 		,#{name}
 		,#{role}
-		,#{startDate}		
-	)	
-</insert>
+		,#{startDate}
+		)
+	</insert>
 
-<delete id="deleteUser" parameterType="com.example.demo.entity.LoginUser">
-	DELETE
-	FROM users
-	WHERE id = #{id}
-</delete>
+	<delete id="deleteUser"
+		parameterType="com.example.demo.entity.LoginUser">
+		DELETE
+		FROM users
+		WHERE id = #{id}
+	</delete>
+
+	<update id="update"
+		parameterType="com.example.demo.entity.LoginUser">
+		UPDATE users
+		SET
+		password = #{password},
+		role = #{role},
+		start_date = #{startDate}
+		WHERE name = #{name}
+	</update>
 
 </mapper>

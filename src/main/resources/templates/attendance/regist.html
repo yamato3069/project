@@ -87,7 +87,7 @@
 					<button type="submit" name="approval" th:if="${user.role != 'Manager'}"
 						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
-					<button type="submit" name="register" th:if="${user.role != 'Manager'}" th:disabled="${formList == null}">登録</button>
+					<button type="submit" name="register" th:if="${user.role != 'Manager'}" th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">登録</button>
 
 				</div>
 
