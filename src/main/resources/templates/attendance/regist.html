@@ -87,7 +87,9 @@
 					<button type="submit" name="approval" th:if="${user.role != 'Manager'}"
 						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
-					<button type="submit" name="register" th:if="${user.role != 'Manager'}" th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">登録</button>
+					<button type="submit" name="register" th:if="${user.role != 'Manager'}"
+						th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}"
+						onclick="return check()">登録</button>
 
 				</div>
 
@@ -96,6 +98,10 @@
 			<div class="success" th:if="${approvalSuccess}" th:text="${approvalSuccess}"></div>
 			<div class="success" th:if="${permission}" th:text="${permission}"></div>
 			<div class="success" th:if="${dismissal}" th:text="${dismissal}"></div>
+			<div class="error" th:if="${errorStartTime}" th:text="${errorStartTime}"></div>
+			<div class="error" th:if="${errorEndTime}" th:text="${errorEndTime}"></div>
+			<div class="error" th:if="${errorRemarks}" th:text="${errorRemarks}"></div>
+			<div class="error" th:if="${errorRemarks2}" th:text="${errorRemarks2}"></div>
 			<table class="approval-info" th:if="${user.role == 'Manager'}">
 
 				<thead>
@@ -131,7 +137,7 @@
 
 			<table class="attendance-info">
 
-				<thead>
+				<thead th:if="${user.role != 'Manager'}">
 					<tr>
 						<th>日付</th>
 						<th>曜日</th>
@@ -150,7 +156,7 @@
 						<td th:text="${form.formattedWeek}">dayOfWeek</td>
 						<td>
 							<select th:field="*{formList.attendanceForm[__${iter.index}__].status}"
-								th:disabled="${myRequest.status == 1 || myRequest.status == 2}">
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}">
 
 								<option value="99" th:selected="${form.status == null || form.status == ''}">未選択
 								</option>
@@ -172,24 +178,24 @@
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
 								th:value="${form.startTime}"
-								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
 						</td>
 
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
 								th:value="${form.endTime}"
-								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
 						</td>
 
 						<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
 								th:value="${form.remarks}"
-								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
 						</td>
 
 						<th:block>
 							<input type="hidden" th:field="*{formList.attendanceForm[__${iter.index}__].date}"
 								th:value="${form.date}"
-								th:disabled="${myRequest.status == 1 || myRequest.status == 2}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
 						</th:block>
 
 					</tr>
@@ -197,9 +203,6 @@
 			</table>
 		</div>
 	</form>
-
-
-
 </body>
 
 
