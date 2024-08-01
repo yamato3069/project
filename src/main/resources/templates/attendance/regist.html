@@ -24,6 +24,10 @@
 		.error {
 			color: red;
 		}
+		.container2{
+			background-color: white;
+		}
+		
 	</style>
 </head>
 
@@ -35,7 +39,7 @@
 		<input type="hidden" th:value="${selectedUserId}" name="selectedUserId">
 		<input type="hidden" th:value="${user.id}" name="userId">
 
-		<div class="container">
+		<div class="container2">
 			<div class="user-info">
 				<p>ユーザ名：</p><span th:text="${user.name}"></span>
 				<p>ユーザID：</p><span name="userId" th:text="${user.id}"></span>
@@ -88,8 +92,7 @@
 						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
 					<button type="submit" name="register" th:if="${user.role != 'Manager'}"
-						th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}"
-						onclick="return check()">登録</button>
+						th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">登録</button>
 
 				</div>
 
