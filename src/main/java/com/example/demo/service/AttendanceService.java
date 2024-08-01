@@ -65,13 +65,15 @@ public class AttendanceService {
 		return myRequest;
 	}
 
+	// 『登録』ボタン押下
 	public boolean insertAttendance(AttendanceEntity attendanceEntity) {
 
 		int result = attendanceMapper.insertAttendance(attendanceEntity);
 
 		return result > 0;
 	}
-
+	
+	// 『登録』ボタン押下
 	public void deleteAttendance(Integer userId, LocalDate date) {
 
 		attendanceMapper.deleteAttendance(userId, date);
