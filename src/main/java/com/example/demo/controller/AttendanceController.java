@@ -174,12 +174,35 @@ public class AttendanceController {
 		LoginUser user = (LoginUser) session.getAttribute("user");
 		model.addAttribute("user", user);
 		int userId = user.getId();
-		model.addAttribute("user", user);
-		attendanceService.validateAttendance(attendanceFormList, result);
 
-		if (result.hasErrors()) {
-			return "attendance/regist";
-		}
+		 boolean hasErrors = false;
+
+		    for (AttendanceForm form : attendanceFormList.getAttendanceForm()) {
+		        if (form.getStartTime() != null && !form.getStartTime().isEmpty()
+		                && !form.getStartTime().matches("\\d{2}:\\d{2}")) {
+		            model.addAttribute("errorStartTime",
+		                    "出勤時間は'hh:mm'の形式で入力してください。");
+		            hasErrors = true;
+		        }
+
+		        if (form.getEndTime() != null && !form.getEndTime().isEmpty()
+		                && !form.getEndTime().matches("\\d{2}:\\d{2}")) {
+		            model.addAttribute("errorEndTime",
+		                    "退勤時間は'hh:mm'の形式で入力してください。");
+		            hasErrors = true;
+		        }
+		        
+		        if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
+		        	 model.addAttribute("errorRemarks","備考は全角文字で入力してください。");
+		        } else if (form.getRemarks().length() > 20) 
+		        	model.addAttribute("errorRemarks2","備考は20文字以内で入力してください。");
+		        	hasErrors = true;
+		    }
+
+		    if (hasErrors) {
+		        return getAttendance(year, month, attendanceFormList, model, session);
+		    }
+	
 
 		for (AttendanceForm attendanceForm1 : attendanceFormList.getAttendanceForm()) {
 

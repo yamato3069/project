@@ -87,7 +87,9 @@
 					<button type="submit" name="approval" th:if="${user.role != 'Manager'}"
 						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
-					<button type="submit" name="register" th:if="${user.role != 'Manager'}" th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">登録</button>
+					<button type="submit" name="register" th:if="${user.role != 'Manager'}"
+						th:disabled="${formList == null || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}"
+						onclick="return check()">登録</button>
 
 				</div>
 
@@ -96,6 +98,10 @@
 			<div class="success" th:if="${approvalSuccess}" th:text="${approvalSuccess}"></div>
 			<div class="success" th:if="${permission}" th:text="${permission}"></div>
 			<div class="success" th:if="${dismissal}" th:text="${dismissal}"></div>
+			<div class="error" th:if="${errorStartTime}" th:text="${errorStartTime}"></div>
+			<div class="error" th:if="${errorEndTime}" th:text="${errorEndTime}"></div>
+			<div class="error" th:if="${errorRemarks}" th:text="${errorRemarks}"></div>
+			<div class="error" th:if="${errorRemarks2}" th:text="${errorRemarks2}"></div>
 			<table class="approval-info" th:if="${user.role == 'Manager'}">
 
 				<thead>
@@ -197,9 +203,6 @@
 			</table>
 		</div>
 	</form>
-
-
-
 </body>
 
 
