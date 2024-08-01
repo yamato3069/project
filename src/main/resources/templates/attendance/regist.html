@@ -131,7 +131,7 @@
 
 			<table class="attendance-info">
 
-				<thead>
+				<thead th:if="${user.role != 'Manager'}">
 					<tr>
 						<th>日付</th>
 						<th>曜日</th>
