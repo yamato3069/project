@@ -195,6 +195,8 @@ public class AttendanceController {
 
 			if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
 				model.addAttribute("errorRemarks", "備考は全角文字で入力してください。");
+				hasErrors = true;
+				
 			} else if (form.getRemarks().length() > 20) {
 				model.addAttribute("errorRemarks2", "備考は20文字以内で入力してください。");
 				hasErrors = true;
@@ -264,7 +266,8 @@ public class AttendanceController {
 		if (myRequest == null) {
 			myRequest = new MonthlyAttendanceReqDto();
 		}
-
+		
+		// 	却下済みの勤怠にもう一度申請をかけるとき
 		if (myRequest.getStatus() == 3) {
 
 			attendanceService.approvalAgain(user.getId(), targetYearMonth);
@@ -293,8 +296,8 @@ public class AttendanceController {
 		model.addAttribute("linkedMonth", month);
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
-		model.addAttribute("user", user);
-		// 
+//		model.addAttribute("user", user);
+		
 
 		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 
@@ -379,13 +382,14 @@ public class AttendanceController {
 			}
 		}
 		// ログイン情報を再取得
-		LoginUser user = (LoginUser) session.getAttribute("user");
+//		LoginUser user = (LoginUser) session.getAttribute("user");
+//		model.addAttribute("user", user);
+		
 		attendanceService.permission(selectedUserId, targetYearMonth);
-		model.addAttribute("user", user);
 		model.addAttribute("permission", "承認しました。");
 
-		return "attendance/regist";
-
+		return hello(session, model);
+			
 	};
 
 	// 『却下』ボタン押下
@@ -404,12 +408,15 @@ public class AttendanceController {
 			}
 		}
 		// ログイン情報を再取得
-		LoginUser user = (LoginUser) session.getAttribute("user");
+//		LoginUser user = (LoginUser) session.getAttribute("user");
+//		model.addAttribute("user", user);
+		
 		attendanceService.dismissal(
 				selectedUserId, targetYearMonth);
-		model.addAttribute("user", user);
+		
 		model.addAttribute("dismissal", "却下しました。");
-		return "attendance/regist";
+
+		return hello(session, model);
 	};
 
 }
