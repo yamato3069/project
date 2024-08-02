@@ -106,6 +106,7 @@
 					<label for="userId">ユーザーID　</label>
 					<input type="hidden" id="id" name="id" th:value="${user != null ? user.id : userId}" />
 					<span th:text="${user != null ? user.id : userId}"></span>
+					<div class="error" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
 				</div>
 			</div>
 
