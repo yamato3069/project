@@ -156,7 +156,7 @@ public class AttendanceController {
 
 			for (AttendanceForm attendanceForm : checkForms) {
 				if (attendanceForm.getStatus() == null || attendanceForm.getStartTime().isEmpty()
-						|| attendanceForm.getEndTime().isEmpty() || attendanceForm.getRemarks().isEmpty()) {
+						|| attendanceForm.getEndTime().isEmpty()) {
 					flg = false;
 					break;
 				}
@@ -217,13 +217,13 @@ public class AttendanceController {
 			}
 
 			if (form.getStatus() == 99
-					&& (!form.getStartTime().isBlank() || !form.getEndTime().isBlank() || !form.getRemarks().isEmpty())) {
+					&& (!form.getStartTime().isBlank() || !form.getEndTime().isBlank())) {
 				model.addAttribute("errorAttendance1", "全項目入力してください。");
 				hasErrors = true;
 			}
 
 			if (form.getStatus() != 99
-					&& (form.getStartTime().isEmpty() || form.getEndTime().isEmpty() || form.getRemarks().isEmpty())) {
+					&& (form.getStartTime().isEmpty() || form.getEndTime().isEmpty())) {
 				model.addAttribute("errorAttendance", "全項目入力してください。");
 				hasErrors = true;
 			}
