@@ -216,13 +216,14 @@ public class AttendanceController {
 				hasErrors = true;
 			}
 
-			//		    if(form.getStatus() == 99 && (!form.getStartTime().isBlank() || !form.getEndTime().isBlank() || form.getRemarks() != null)) {
-			//		    	 model.addAttribute("errorAttendance1", "出勤状況を選択してください。");
-			//		    	 hasErrors = true;
-			//		    }
-			//		    
+			if (form.getStatus() == 99
+					&& (!form.getStartTime().isBlank() || !form.getEndTime().isBlank() || !form.getRemarks().isEmpty())) {
+				model.addAttribute("errorAttendance1", "全項目入力してください。");
+				hasErrors = true;
+			}
+
 			if (form.getStatus() != 99
-					&& (form.getStartTime().isEmpty() || form.getEndTime().isEmpty() || form.getRemarks() == null)) {
+					&& (form.getStartTime().isEmpty() || form.getEndTime().isEmpty() || form.getRemarks().isEmpty())) {
 				model.addAttribute("errorAttendance", "全項目入力してください。");
 				hasErrors = true;
 			}
