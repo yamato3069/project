@@ -53,7 +53,7 @@ public class UserRegistrationController {
 				model.addAttribute("userId", userId);
 			}
 
-		}
+		}		
 		return "user/registration";
 	}
 

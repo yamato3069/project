@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,34 +179,49 @@ public class AttendanceController {
 
 		boolean hasErrors = false;
 
+
 		for (AttendanceForm form : attendanceFormList.getAttendanceForm()) {
-			if (form.getStartTime() != null && !form.getStartTime().isEmpty()
-					&& !form.getStartTime().matches("\\d{2}:\\d{2}")) {
-				model.addAttribute("errorStartTime",
-						"出勤時間は'hh:mm'の形式で入力してください。");
-				hasErrors = true;
-			}
+		    if (form.getStartTime() != null && !form.getStartTime().isEmpty()) {
+		        if (!form.getStartTime().matches("\\d{2}:\\d{2}")) {
+		            model.addAttribute("errorStartTime", "出勤時間は'hh:mm'の形式で入力してください。");
+		            hasErrors = true;
+		        } else {
+		            try {
+		                LocalTime.parse(form.getStartTime(), DateTimeFormatter.ofPattern("HH:mm"));
+		            } catch (DateTimeParseException e) {
+		                model.addAttribute("startTime", "出勤時間は存在しない時間です。");
+		                hasErrors = true;
+		            }
+		        }
+		    }
 
-			if (form.getEndTime() != null && !form.getEndTime().isEmpty()
-					&& !form.getEndTime().matches("\\d{2}:\\d{2}")) {
-				model.addAttribute("errorEndTime",
-						"退勤時間は'hh:mm'の形式で入力してください。");
-				hasErrors = true;
-			}
+		    if (form.getEndTime() != null && !form.getEndTime().isEmpty()) {
+		        if (!form.getEndTime().matches("\\d{2}:\\d{2}")) {
+		            model.addAttribute("errorEndTime", "退勤時間は'hh:mm'の形式で入力してください。");
+		            hasErrors = true;
+		        } else {
+		            try {
+		                LocalTime.parse(form.getEndTime(), DateTimeFormatter.ofPattern("HH:mm"));
+		            } catch (DateTimeParseException e) {
+		                model.addAttribute("endTime", "退勤時間は存在しない時間です。");
+		                hasErrors = true;
+		            }
+		        }
+		    }
 
-			if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
-				model.addAttribute("errorRemarks", "備考は全角文字で入力してください。");
-				hasErrors = true;
-				
-			} else if (form.getRemarks().length() > 20) {
-				model.addAttribute("errorRemarks2", "備考は20文字以内で入力してください。");
-				hasErrors = true;
-			}
+		    if (form.getRemarks() != null && form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
+		        model.addAttribute("errorRemarks", "備考は全角文字で入力してください。");
+		        hasErrors = true;
+		    } else if (form.getRemarks() != null && form.getRemarks().length() > 20) {
+		        model.addAttribute("errorRemarks2", "備考は20文字以内で入力してください。");
+		        hasErrors = true;
+		    }
 		}
 
 		if (hasErrors) {
-			return getAttendance(year, month, attendanceFormList, model, session);
+		    return getAttendance(year, month, attendanceFormList, model, session);
 		}
+
 
 		for (AttendanceForm attendanceForm1 : attendanceFormList.getAttendanceForm()) {
 
@@ -266,7 +282,7 @@ public class AttendanceController {
 		if (myRequest == null) {
 			myRequest = new MonthlyAttendanceReqDto();
 		}
-		
+
 		// 	却下済みの勤怠にもう一度申請をかけるとき
 		if (myRequest.getStatus() == 3) {
 
@@ -296,8 +312,7 @@ public class AttendanceController {
 		model.addAttribute("linkedMonth", month);
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
-//		model.addAttribute("user", user);
-		
+		//		model.addAttribute("user", user);
 
 		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 
@@ -382,14 +397,14 @@ public class AttendanceController {
 			}
 		}
 		// ログイン情報を再取得
-//		LoginUser user = (LoginUser) session.getAttribute("user");
-//		model.addAttribute("user", user);
-		
+		//		LoginUser user = (LoginUser) session.getAttribute("user");
+		//		model.addAttribute("user", user);
+
 		attendanceService.permission(selectedUserId, targetYearMonth);
 		model.addAttribute("permission", "承認しました。");
 
 		return hello(session, model);
-			
+
 	};
 
 	// 『却下』ボタン押下
@@ -408,12 +423,12 @@ public class AttendanceController {
 			}
 		}
 		// ログイン情報を再取得
-//		LoginUser user = (LoginUser) session.getAttribute("user");
-//		model.addAttribute("user", user);
-		
+		//		LoginUser user = (LoginUser) session.getAttribute("user");
+		//		model.addAttribute("user", user);
+
 		attendanceService.dismissal(
 				selectedUserId, targetYearMonth);
-		
+
 		model.addAttribute("dismissal", "却下しました。");
 
 		return hello(session, model);
