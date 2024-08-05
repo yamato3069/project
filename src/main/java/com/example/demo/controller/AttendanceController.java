@@ -216,6 +216,11 @@ public class AttendanceController {
 		        model.addAttribute("errorRemarks2", "備考は20文字以内で入力してください。");
 		        hasErrors = true;
 		    }
+		    
+//		    if(form.getStatus() != 99 && form.getStartTime() || form.getEndTime() || form.getRemarks()) {
+//		    	
+//		    }
+		    
 		}
 
 		if (hasErrors) {
@@ -312,7 +317,7 @@ public class AttendanceController {
 		model.addAttribute("linkedMonth", month);
 		// ログイン情報を再取得
 		LoginUser user = (LoginUser) session.getAttribute("user");
-		//		model.addAttribute("user", user);
+				model.addAttribute("user", user);
 
 		List<AttendanceDayDto> calendar = attendanceService.generateCalendar(year, month);
 
