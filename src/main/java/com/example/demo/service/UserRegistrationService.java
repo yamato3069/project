@@ -39,6 +39,8 @@ public class UserRegistrationService {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
 		}else if(userSerchForm.getName().length() > 20 ) {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名は20文字以内で入力してください。"));
+		}else if (!userSerchForm.getName().matches("[^\\x00-\\x7F]+")) {
+		    result.addError(new FieldError("userSerchForm", "name", "ユーザー名は全角文字で入力してください。"));
 		}
 	}
 	
@@ -54,7 +56,7 @@ public class UserRegistrationService {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名を入力してください。"));
 		}else if(userSerchForm.getName().length() > 20 ) {
 			result.addError(new FieldError("userSerchForm", "name", "ユーザー名は20文字以内で入力してください。"));
-		}else if (userSerchForm.getName().matches(".*[\\p{InBasicLatin}].*")) {
+		}else if (!userSerchForm.getName().matches("[^\\x00-\\x7F]+")) {
 		    result.addError(new FieldError("userSerchForm", "name", "ユーザー名は全角文字で入力してください。"));
 		}
 		if(userSerchForm.getId() == null) {

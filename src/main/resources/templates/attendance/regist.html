@@ -109,6 +109,8 @@
 			<div class="error" th:if="${errorRemarks2}" th:text="${errorRemarks2}"></div>
 			<div class="error" th:if="${startTime}" th:text="${startTime}"></div>
 			<div class="error" th:if="${endTime}" th:text="${endTime}"></div>
+			<div class="error" th:if="${errorAttendance}" th:text="${errorAttendance}"></div>
+			<div class="error" th:if="${errorAttendance1}" th:text="${errorAttendance1}"></div>
 			<table class="approval-info" th:if="${user.role == 'Manager'}">
 
 				<thead>

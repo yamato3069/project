@@ -41,9 +41,12 @@ public class LoginService {
     	if(loginForm.getId().isEmpty()) {
     		result.addError(new FieldError("loginForm", "id", "ユーザーIDを入力してください"));
     		
-    	}else if(loginForm.getId().length() > 16)
+    	}else if(loginForm.getId().matches("[^\\x00-\\x7F]+")) {
+    		result.addError(new FieldError("loginForm", "id", "半角で入力してください。"));
+    	}
+    	else if(loginForm.getId().length() > 16) {
     		result.addError(new FieldError("loginForm", "id", "16文字以内で入力してください。"));
-    	
+    	}
     	if(loginForm.getPassword().isEmpty()) {
     		result.addError(new FieldError("loginForm", "password", "パスワードを入力してください"));
     	}else if(loginForm.getPassword().length() > 16)
