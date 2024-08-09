@@ -13,8 +13,7 @@ public class MonthlyAttendanceReqDto {
 	private LocalDate date;
 	private Short status;
 	private String name;
-	
-	
+	private String rejectionReason;
 	
 // コンストラクタ
 	public MonthlyAttendanceReqDto(){
