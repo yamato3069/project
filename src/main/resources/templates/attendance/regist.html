@@ -86,11 +86,13 @@
 
 				<div class="buttons">
 
-					<button type="submit" name="dismissal" th:if="${user.role == 'Manager'}" th:disabled="${targetYearMonth == null}">却下</button>
+					<button type="submit" name="dismissal" id="dismissalButton" th:if="${user.role == 'Manager'}"
+						th:disabled="${targetYearMonth == null}">却下</button>
 
-					<button type="submit" name="permission" th:if="${user.role == 'Manager'}" th:disabled="${targetYearMonth == null}">承認</button>
+					<button type="submit" name="permission" id="permissionButton" th:if="${user.role == 'Manager'}"
+						th:disabled="${targetYearMonth == null}">承認</button>
 
-					<button type="submit" name="approval" th:if="${user.role != 'Manager'}"
+					<button type="submit" name="approval" id="approveButton" th:if="${user.role != 'Manager'}"
 						th:disabled="${attendanceFlg != true || (myRequest != null && (myRequest.status == 1 || myRequest.status == 2))}">承認申請</button>
 
 					<button type="submit" name="register" th:if="${user.role != 'Manager'}"
@@ -111,6 +113,13 @@
 			<div class="error" th:if="${endTime}" th:text="${endTime}"></div>
 			<div class="error" th:if="${errorAttendance}" th:text="${errorAttendance}"></div>
 			<div class="error" th:if="${errorAttendance1}" th:text="${errorAttendance1}"></div>
+			<div class="error" th:if="${timeError}" th:text="${timeError}"></div>
+			<div class="error"
+				th:if="${myRequest != null and myRequest.rejectionReason != null and !myRequest.rejectionReason.isEmpty()}">
+				<p>却下理由: <span th:text="${myRequest.rejectionReason}"></span></p>
+			</div>
+
+
 			<table class="approval-info" th:if="${user.role == 'Manager'}">
 
 				<thead>
@@ -127,8 +136,7 @@
 						<td>
 							<nav>
 								<a
-									th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, selectedUserId=${reqList.selectedUserId}, userId=${user.id})}"
-									>
+									th:href="@{/attendance/request(targetYearMonth=${reqList.targetYearMonth}, selectedUserId=${reqList.selectedUserId}, userId=${user.id})}">
 									[[${reqList.name}]]
 								</a>
 							</nav>
@@ -187,13 +195,15 @@
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].startTime}"
 								th:value="${form.startTime}"
-								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}"
+								placeholder="(入力例)09:00" />
 						</td>
 
 						<td>
 							<input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].endTime}"
 								th:value="${form.endTime}"
-								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}" />
+								th:disabled="${(myRequest.status == 1 || myRequest.status == 2) || user.role == 'Manager'}"
+								placeholder="(入力例)18:00" />
 						</td>
 
 						<td><input type="text" th:field="*{formList.attendanceForm[__${iter.index}__].remarks}"
@@ -212,6 +222,57 @@
 			</table>
 		</div>
 	</form>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var approveButton = document.getElementById('approveButton');
+			var dismissalButton = document.getElementById('dismissalButton');
+			var permissionButton = document.getElementById('permissionButton');
+
+			if (approveButton) {
+				approveButton.addEventListener('click', function (event) {
+					var confirmation = confirm("本当に承認申請しますか?");
+					if (!confirmation) {
+						event.preventDefault();
+						alert("承認申請はキャンセルされました。");
+					}
+				});
+			}
+
+			if (dismissalButton) {
+				dismissalButton.addEventListener('click', function (event) {
+					var reason = prompt("却下理由を入力してください:");
+					if (reason === null || reason.trim() === "") {
+						event.preventDefault();
+						alert("却下理由は必須です。");
+					} else {
+						var reasonInput = document.createElement("input");
+						reasonInput.type = "hidden";
+						reasonInput.name = "rejectionReason";
+						reasonInput.value = reason;
+						document.getElementById("AttendanceForm").appendChild(reasonInput);
+
+						var confirmation = confirm("本当に却下しますか?");
+						if (!confirmation) {
+							event.preventDefault();
+							alert("却下はキャンセルされました。");
+						}
+					}
+				});
+			}
+
+			if (permissionButton) {
+				permissionButton.addEventListener('click', function (event) {
+					var confirmation = confirm("本当に承認しますか?");
+					if (!confirmation) {
+						event.preventDefault();
+						alert("承認はキャンセルされました。");
+					}
+				});
+			}
+		});
+	</script>
+
 </body>
 
 

@@ -27,8 +27,7 @@ public interface AttendanceMapper {
 	// 『承認』ボタン押下
 	boolean permission(Integer selectedUserId, LocalDate targetYearMonth);
 	// 『却下』ボタン押下
-	boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth);
+	boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth, @Param("rejectionReason") String rejectionReason);
 	//　UM,社員、月次勤怠申請取得
 	MonthlyAttendanceReqDto findReqById( LocalDate targetYearMonth,@Param("id") Integer id);
-
 }

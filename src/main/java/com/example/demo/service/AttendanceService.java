@@ -5,7 +5,6 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AttendanceDayDto;
@@ -18,8 +17,11 @@ import com.example.demo.mapper.AttendanceMapper;
 
 public class AttendanceService {
 
-	@Autowired
-	private AttendanceMapper attendanceMapper;
+	private final AttendanceMapper attendanceMapper;
+
+	public AttendanceService(AttendanceMapper attendanceMapper) {
+		this.attendanceMapper = attendanceMapper;
+	}
 
 	public List<AttendanceDayDto> generateCalendar(int year, int month) {
 
@@ -44,7 +46,7 @@ public class AttendanceService {
 		return attendanceDtoList;
 
 	}
-	
+
 	// MG側　月次勤怠申請リスト取得
 	public List<MonthlyAttendanceReqDto> findAttendanceReq() {
 
@@ -52,11 +54,11 @@ public class AttendanceService {
 
 		return attendanceReqList;
 	}
-	
-	// 社員、UM側　月次勤怠取得
-	public MonthlyAttendanceReqDto findReqById(LocalDate targetYearMonth,Integer id) {
 
-		MonthlyAttendanceReqDto myRequest = attendanceMapper.findReqById(targetYearMonth,id);
+	// 社員、UM側　月次勤怠取得
+	public MonthlyAttendanceReqDto findReqById(LocalDate targetYearMonth, Integer id) {
+
+		MonthlyAttendanceReqDto myRequest = attendanceMapper.findReqById(targetYearMonth, id);
 
 		return myRequest;
 	}
@@ -68,7 +70,7 @@ public class AttendanceService {
 
 		return result > 0;
 	}
-	
+
 	// 『登録』ボタン押下
 	public void deleteAttendance(Integer userId, LocalDate date) {
 
@@ -83,12 +85,12 @@ public class AttendanceService {
 		return attendance;
 
 	}
-	
+
 	// 却下後再度『承認申請』ボタン押下
 	public boolean approvalAgain(Integer id, LocalDate targetYearMonth) {
-		
+
 		boolean again = attendanceMapper.approvalAgain(id, targetYearMonth);
-		
+
 		return again;
 	};
 
@@ -99,35 +101,36 @@ public class AttendanceService {
 		return permission;
 	};
 
-	public boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth) {
+	public boolean dismissal(Integer selectedUserId, LocalDate targetYearMonth, String rejectionReason) {
 
-		boolean dismissal = attendanceMapper.dismissal(selectedUserId, targetYearMonth);
+		boolean dismissal = attendanceMapper.dismissal(selectedUserId, targetYearMonth, rejectionReason);
 
 		return dismissal;
 	};
 
+	
 	//以下は暇なとき要検証
-//	public void validateAttendance(AttendanceFormList attendanceFormList, BindingResult result) {
-//		for (int i = 0; i < attendanceFormList.getAttendanceForm().size(); i++) {
-//			AttendanceForm form = attendanceFormList.getAttendanceForm().get(i);
-//
-//			if (form.getStartTime() != null && !form.getStartTime().isEmpty()
-//					&& !form.getStartTime().matches("\\d{2}:\\d{2}")) {
-//				result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].startTime",
-//						"出勤時間は'hh:mm'の形式で入力してください。"));
+//		public void validateAttendance(AttendanceFormList attendanceFormList, BindingResult result) {
+//			for (int i = 0; i < attendanceFormList.getAttendanceForm().size(); i++) {
+//				AttendanceForm form = attendanceFormList.getAttendanceForm().get(i);
+//	
+//				if (form.getStartTime() != null && !form.getStartTime().isEmpty()
+//						&& !form.getStartTime().matches("\\d{2}:\\d{2}")) {
+//					result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].startTime",
+//							"出勤時間は'hh:mm'の形式で入力してください。"));
+//				}
+//				if (form.getEndTime() != null && !form.getEndTime().isEmpty()
+//						&& !form.getEndTime().matches("\\d{2}:\\d{2}")) {
+//					result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].endTime",
+//							"退勤時間は'hh:mm'の形式で入力してください。"));
+//				}
+//				if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
+//					result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].remarks",
+//							"備考は全角文字で入力してください。"));
+//				} else if (form.getRemarks().length() > 20)
+//					result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].remarks",
+//							"備考は20文字以内で入力してください。"));
 //			}
-//			if (form.getEndTime() != null && !form.getEndTime().isEmpty()
-//					&& !form.getEndTime().matches("\\d{2}:\\d{2}")) {
-//				result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].endTime",
-//						"退勤時間は'hh:mm'の形式で入力してください。"));
-//			}
-//			if (form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
-//				result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].remarks",
-//						"備考は全角文字で入力してください。"));
-//			} else if (form.getRemarks().length() > 20)
-//				result.addError(new FieldError("attendanceFormList", "attendanceForm[" + i + "].remarks",
-//						"備考は20文字以内で入力してください。"));
 //		}
-//	}
 
 }

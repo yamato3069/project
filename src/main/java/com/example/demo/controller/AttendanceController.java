@@ -7,7 +7,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,10 +31,13 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/attendance")
 public class AttendanceController {
 
-	@Autowired
-	private AttendanceService attendanceService;
-	@Autowired
-	private LoginService loginService;
+	public final AttendanceService attendanceService;
+	public final LoginService loginService;
+
+	public AttendanceController(AttendanceService attendanceService, LoginService loginService) {
+		this.attendanceService = attendanceService;
+		this.loginService = loginService;
+	}
 
 	// 初期表示
 	@RequestMapping("/regist")
@@ -162,7 +164,6 @@ public class AttendanceController {
 				}
 			}
 			model.addAttribute("attendanceFlg", flg);
-
 			return "attendance/regist";
 		}
 
@@ -180,15 +181,18 @@ public class AttendanceController {
 		boolean hasErrors = false;
 
 		for (AttendanceForm form : attendanceFormList.getAttendanceForm()) {
+			LocalTime startTime1 = null;
+			LocalTime endTime1 = null;
+
 			if (form.getStartTime() != null && !form.getStartTime().isEmpty()) {
 				if (!form.getStartTime().matches("\\d{2}:\\d{2}")) {
 					model.addAttribute("errorStartTime", "出勤時間は'hh:mm'の形式で入力してください。");
 					hasErrors = true;
 				} else {
 					try {
-						LocalTime.parse(form.getStartTime(), DateTimeFormatter.ofPattern("HH:mm"));
+						startTime1 = LocalTime.parse(form.getStartTime(), DateTimeFormatter.ofPattern("HH:mm"));
 					} catch (DateTimeParseException e) {
-						model.addAttribute("startTime", "出勤時間は存在しない時間です。");
+						model.addAttribute("errorStartTime", "出勤時間は存在しない時間です。");
 						hasErrors = true;
 					}
 				}
@@ -200,12 +204,17 @@ public class AttendanceController {
 					hasErrors = true;
 				} else {
 					try {
-						LocalTime.parse(form.getEndTime(), DateTimeFormatter.ofPattern("HH:mm"));
+						endTime1 = LocalTime.parse(form.getEndTime(), DateTimeFormatter.ofPattern("HH:mm"));
 					} catch (DateTimeParseException e) {
-						model.addAttribute("endTime", "退勤時間は存在しない時間です。");
+						model.addAttribute("errorEndTime", "退勤時間は存在しない時間です。");
 						hasErrors = true;
 					}
 				}
+			}
+
+			if (startTime1 != null && endTime1 != null && startTime1.isAfter(endTime1)) {
+				model.addAttribute("timeError", "不正な勤怠時間です。");
+				hasErrors = true;
 			}
 
 			if (form.getRemarks() != null && form.getRemarks().matches(".*[\\p{InBasicLatin}].*")) {
@@ -216,22 +225,19 @@ public class AttendanceController {
 				hasErrors = true;
 			}
 
-			if (form.getStatus() == 99
-					&& (!form.getStartTime().isBlank() || !form.getEndTime().isBlank())) {
+			if (form.getStatus() == 99 && (!form.getStartTime().isBlank() || !form.getEndTime().isBlank())) {
 				model.addAttribute("errorAttendance1", "全項目入力してください。");
 				hasErrors = true;
 			}
 
-			if (form.getStatus() != 99
-					&& (form.getStartTime().isEmpty() || form.getEndTime().isEmpty())) {
+			if (form.getStatus() != 99 && (form.getStartTime().isEmpty() || form.getEndTime().isEmpty())) {
 				model.addAttribute("errorAttendance", "全項目入力してください。");
 				hasErrors = true;
 			}
 
-		}
-
-		if (hasErrors) {
-			return getAttendance(year, month, attendanceFormList, model, session);
+			if (hasErrors) {
+				return getAttendance(year, month, attendanceFormList, model, session);
+			}
 		}
 
 		for (AttendanceForm attendanceForm1 : attendanceFormList.getAttendanceForm()) {
@@ -422,7 +428,8 @@ public class AttendanceController {
 	// 『却下』ボタン押下
 	@PostMapping(path = "/show", params = "dismissal")
 	public String dismissal(@RequestParam("targetYearMonth") LocalDate targetYearMonth,
-			@RequestParam("userId") Integer userId, @RequestParam("selectedUserId") Integer selectedUserId, Model model,
+			@RequestParam("userId") Integer userId, @RequestParam("selectedUserId") Integer selectedUserId,
+			@RequestParam("rejectionReason") String rejectionReason, Model model,
 			HttpSession session) {
 		List<MonthlyAttendanceReqDto> attendanceReqList = attendanceService.findAttendanceReq();
 		model.addAttribute("attendanceReqList", attendanceReqList);
@@ -439,8 +446,7 @@ public class AttendanceController {
 		//		model.addAttribute("user", user);
 
 		attendanceService.dismissal(
-				selectedUserId, targetYearMonth);
-
+				selectedUserId, targetYearMonth, rejectionReason);
 		model.addAttribute("dismissal", "却下しました。");
 
 		return hello(session, model);

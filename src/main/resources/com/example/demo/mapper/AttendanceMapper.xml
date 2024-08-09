@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.AttendanceMapper">
-	
-<!--	表示ボタン押下-->
+
+	<!-- 表示ボタン押下 -->
 	<select id="findByYearAndMonth"
 		resultType="com.example.demo.dto.AttendanceDto">
 		SELECT
@@ -13,12 +13,14 @@
 		t1.start_time AS startTime,
 		t1.end_time AS endTime,
 		t1.remarks
-		FROM attendance t1
+		FROM
+		attendance t1
 		WHERE
-		YEAR(date) = #{year} AND MONTH(date) = #{month} AND user_id = #{userId};
+		YEAR(date) = #{year} AND MONTH(date) = #{month} AND
+		user_id = #{userId};
 	</select>
-	
-<!--	登録ボタン押下-->
+
+	<!-- 登録ボタン押下 -->
 	<insert id="insertAttendance"
 		parameterType="com.example.demo.entity.AttendanceEntity">
 		INSERT INTO attendance
@@ -40,29 +42,32 @@
 
 	</insert>
 
-<!--登録ボタン押下-->
+	<!--登録ボタン押下 -->
 	<delete id="deleteAttendance"
 		parameterType="com.example.demo.entity.AttendanceEntity">
 		DELETE
 		FROM attendance
 		WHERE
-		user_id = #{userId} AND date = #{date}
+		user_id = #{userId} AND date =
+		#{date}
 	</delete>
 
-<!--初期表示-->
+	<!--初期表示 -->
 	<select id="findAttendanceReq"
 		resultType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		SELECT
 		id AS Id,
 		user_id AS selectedUserId,
-		target_year_month AS targetYearMonth,
+		target_year_month
+		AS targetYearMonth,
 		date,
 		is_approved AS status
-		FROM monthly_attendance_req
+		FROM
+		monthly_attendance_req
 		WHERE is_approved = 1
 	</select>
 
-<!--承認申請ボタン押下-->
+	<!--承認申請ボタン押下 -->
 	<insert id="approval"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		INSERT INTO monthly_attendance_req
@@ -78,54 +83,61 @@
 		)
 
 	</insert>
-	
-<!--却下後再度承認申請ボタン押下-->	
-		<update id="approvalAgain"
+
+	<!--却下後再度承認申請ボタン押下 -->
+	<update id="approvalAgain"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		UPDATE monthly_attendance_req
 		SET
-		is_approved = 1
-		WHERE user_id = #{id}
+		is_approved = 1,
+		rejection_reason = null
+		WHERE
+		user_id = #{id}
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>
-	
-<!--承認ボタン押下-->
+
+	<!--承認ボタン押下 -->
 	<update id="permission"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		UPDATE monthly_attendance_req
 		SET
 		is_approved = 2
-		WHERE user_id = #{selectedUserId}
+		WHERE
+		user_id = #{selectedUserId}
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>
 
-<!--却下ボタン押下-->
+	<!--却下ボタン押下 -->
 	<update id="dismissal"
 		parameterType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		UPDATE monthly_attendance_req
 		SET
-		is_approved = 3
+		is_approved = 3,
+		rejection_reason = #{rejectionReason}
 		WHERE user_id = #{selectedUserId}
 		AND
 		target_year_month = #{targetYearMonth}
 	</update>
-	
-<!--表示ボタン押下	-->
-		<select id="findReqById"
+
+	<!--表示ボタン押下 -->
+	<select id="findReqById"
 		resultType="com.example.demo.dto.MonthlyAttendanceReqDto">
 		SELECT
 		t1.id,
 		t1.user_id AS userId,
-		t1.target_year_month AS targetYearMonth,
+		t1.target_year_month AS
+		targetYearMonth,
 		t1.date,
-		t1.is_approved AS status
-		FROM monthly_attendance_req t1
+		t1.is_approved AS status,
+		t1.rejection_reason AS rejectionReason
+		FROM
+		monthly_attendance_req t1
 		WHERE
 		user_id = #{id}
 		AND
-		target_year_month = #{targetYearMonth}
+		target_year_month =
+		#{targetYearMonth}
 	</select>
-
 </mapper>
